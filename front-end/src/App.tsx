@@ -1,15 +1,10 @@
-import React from "react";
-import "./App.scss";
-import "bootstrap/dist/css/bootstrap.min.css";
-import { Button } from "react-bootstrap";
+import React from 'react'
+import 'bootstrap/dist/css/bootstrap.min.css'
+import 'bootstrap/dist/js/bootstrap'
+import MainView from './views/main/MainView'
 
 function App() {
-  return (
-    <>
-      <h1>My app</h1>
-      <Button>button</Button>
-    </>
-  );
+  return <MainView />
 }
 
-export default App;
+export default App

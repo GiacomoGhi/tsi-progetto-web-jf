@@ -4,7 +4,7 @@ module.exports = {
     browser: true,
     node: true,
     jest: true,
-    es6: true
+    es5: true
   },
   extends: [
     'plugin:react/recommended', // Uses the recommended rules from @eslint-plugin-react

@@ -1,7 +1,9 @@
 import React from 'react'
+import './AppNavigationMenu.style.scss'
+import { LogoBlu } from 'assets'
 function AppNavigationMenu() {
   return (
-    <div className="container-fluid rounded-bottom-4 z-3 ps-5" id="this">
+    <div className="container-fluid rounded-bottom-4 z-3 ps-5 navBar">
       <div className="row my-0 py-0 ">
         <div className="px-0">
           <nav className="navbar navbar-expand-md navbar-dark">
@@ -12,14 +14,14 @@ function AppNavigationMenu() {
                 href="https://corsi.unibo.it/laurea/TecnologieSistemiInformatici">
                 <img
                   id="logo"
-                  src="img/LogoBlu"
+                  src={LogoBlu}
                   className="img-fluid mx-2"
                   alt="Logo unibo - link per sito web TSI"
                   style={{ maxHeight: '100px' }}
                 />
               </a>
               <button
-                className="navbar-toggler"
+                className="navbar-toggler navLink"
                 type="button"
                 data-bs-toggle="offcanvas"
                 data-bs-target="#offcanvasDarkNavbar"
@@ -44,11 +46,21 @@ function AppNavigationMenu() {
                 </div>
                 <div className="offcanvas-body" id="nav_bar">
                   <ul className="navbar-nav justify-content-end flex-grow-1 pe-3">
-                    <li className="nav-item me-4 mb-1">ciao</li>
-                    <li className="nav-item me-4 mb-1">ciao</li>
-                    <li className="nav-item me-4 mb-1">ciao</li>
-                    <li className="nav-item me-4 mb-1">ciao</li>
-                    <li className="nav-item me-4 mb-1">ciao</li>
+                    <li className="nav-item me-4 mb-1">
+                      <p className="p-3 nav-link text-white text-center">Home</p>
+                    </li>
+                    <li className="nav-item me-4 mb-1">
+                      <p className="p-3 nav-link text-white text-center">Impara</p>
+                    </li>
+                    <li className="nav-item me-4 mb-1">
+                      <p className="p-3 nav-link text-white text-center">Iscriviti</p>
+                    </li>
+                    <li className="nav-item me-4 mb-1">
+                      <p className="p-3 nav-link text-white text-center">Bacheca</p>
+                    </li>
+                    <li className="nav-item me-4 mb-1">
+                      <p className="p-3 nav-link text-white text-center">Novità</p>
+                    </li>
                   </ul>
                 </div>
               </div>

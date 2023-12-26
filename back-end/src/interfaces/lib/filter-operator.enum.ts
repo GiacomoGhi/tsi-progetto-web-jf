@@ -1,0 +1,16 @@
+export enum FilterOperator {
+  contains,
+  notContains,
+  equals,
+  notEqual,
+  startsWith,
+  endsWith,
+  greaterThan,
+  lessThan,
+  greaterThanOrEqual,
+  lessThanOrEqual,
+  inRange,
+  blankOrEmpty,
+  notBlank,
+  blank,
+}

@@ -1,0 +1,16 @@
+version: '3.7'
+services:
+  db:
+    container_name: tsi-progetto-postgresql
+    image: tsiprogettowebjf
+    environment:
+      POSTGRES_PASSWORD: password
+      POSTGRES_USER: tsi-local-user
+      POSTGRES_DB: tsi-db
+    ports:
+      - 5439:5432
+    volumes:
+      - tsi-postgresql-volume:/var/lib/postgresql
+
+volumes:
+  tsi-postgresql-volume:

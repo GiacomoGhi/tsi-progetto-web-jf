@@ -1,0 +1,16 @@
+export enum FieldType {
+  text,
+  date,
+  time,
+  datetime,
+  decimal,
+  integer,
+  percent,
+  currency,
+  boolean,
+  enum,
+  document,
+  image,
+  json,
+  year,
+}

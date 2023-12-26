@@ -17,8 +17,8 @@ export class UserEntity extends BaseEntity {
   name!: string;
 
   @AutoMap()
-  @Column('boolean')
-  surname!: boolean;
+  @Column('varchar')
+  surname!: string;
 
   @AutoMap()
   @Column('varchar', { nullable: true })

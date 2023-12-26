@@ -13,8 +13,7 @@ import ArRvDifferenza from './img/realta-aumentata-realta-virtuale-differenza.pn
 import TutaCompleta from './img/tuta_completa.png'
 import ARBodySystems from './img/carosello3/AR-Body-systems.jpg'
 import AugmentedReality from './img/carosello3/Augmented-Reality.jpg'
-import CreatingARWebsiteWithARJS from './img/carosello3/Creating-a-Augmented-Reality-Website-with-AR.JS.jpg'
-import CreatingARWebsiteWithARJSPng from './img/carosello3/Creating-a-Augmented-Reality-Website-with-AR.JS.png'
+import CreatingARWebsiteWithARJS from './img/carosello3/Creating-a-Augmented-Reality-Website-with-ARJS.jpg'
 import Ikea2 from './img/carosello3/ikea2.jpg'
 import Industry40 from './img/carosello3/industry40.jpg'
 import Learning from './img/carosello3/learning.jpg'
@@ -39,7 +38,6 @@ export {
   ARBodySystems,
   AugmentedReality,
   CreatingARWebsiteWithARJS,
-  CreatingARWebsiteWithARJSPng,
   Ikea2,
   Industry40,
   Learning,

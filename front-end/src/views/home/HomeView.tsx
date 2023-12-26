@@ -11,7 +11,6 @@ import {
   RemoteSupport,
   Scarpe
 } from 'assets'
-import path from 'path'
 
 function HomeView() {
   const imgPaths = [

@@ -1,7 +1,12 @@
 import React from 'react'
 import './AppNavigationMenu.style.scss'
 import { LogoBlu } from 'assets'
+import { Link } from 'react-router-dom'
+
 function AppNavigationMenu() {
+  //TODO
+  // Qui si può applicare il codice per far scomparire il menu
+  // quando si scrolla in basso
   return (
     <div className="container-fluid rounded-bottom-4 z-3 ps-5 navBar">
       <div className="row my-0 py-0 ">
@@ -47,19 +52,29 @@ function AppNavigationMenu() {
                 <div className="offcanvas-body" id="nav_bar">
                   <ul className="navbar-nav justify-content-end flex-grow-1 pe-3">
                     <li className="nav-item me-4 mb-1">
-                      <p className="p-3 nav-link text-white text-center">Home</p>
+                      <Link to="/" className="p-3 nav-link text-white text-center">
+                        Home
+                      </Link>
                     </li>
                     <li className="nav-item me-4 mb-1">
-                      <p className="p-3 nav-link text-white text-center">Impara</p>
+                      <Link to="/" className="p-3 nav-link text-white text-center">
+                        Impara
+                      </Link>
                     </li>
                     <li className="nav-item me-4 mb-1">
-                      <p className="p-3 nav-link text-white text-center">Iscriviti</p>
+                      <Link to="/" className="p-3 nav-link text-white text-center">
+                        Iscriviti
+                      </Link>
                     </li>
                     <li className="nav-item me-4 mb-1">
-                      <p className="p-3 nav-link text-white text-center">Bacheca</p>
+                      <Link to="/" className="p-3 nav-link text-white text-center">
+                        Bacheca
+                      </Link>
                     </li>
                     <li className="nav-item me-4 mb-1">
-                      <p className="p-3 nav-link text-white text-center">Novità</p>
+                      <Link to="/" className="p-3 nav-link text-white text-center">
+                        Novità
+                      </Link>
                     </li>
                   </ul>
                 </div>

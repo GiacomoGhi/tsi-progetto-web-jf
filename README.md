@@ -28,3 +28,11 @@ In Visual Studio Code click the Extensions button in the Activity Bar and instal
 - PostgreSQL (on a Docker container)
 - NestJS (bak-end and front-end Node)
 - TypeScript (instad of JavaScript)
+
+
+## StartUp
+
+1. **DB** - On Docker Desktop App, Run the Docker container (tsi-progetto-web/tsi-progetto-postgresql)
+2. **Application Server** (back-end Node) - On VS Code, Run the back-end DEV Script (*maintain running terminal active for all time long*)
+3. **Wsb Server** (front-end Node) - On VS Code, Run the back-end START Script (*maintain running terminal active for all time long*)
+

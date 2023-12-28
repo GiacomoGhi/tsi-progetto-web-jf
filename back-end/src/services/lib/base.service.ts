@@ -108,11 +108,6 @@ export abstract class BaseService<T extends BaseEntity>
       where: optsWhere,
     } as FindOneOptions<T>;
 
-    // const where = {
-    //   id: id,
-    //   ...options?.where,
-    // } as FindOptionsWhere<T>;
-
     const res = await manager.findOne(this.repository.metadata.target, opts);
 
     if (!res) {
@@ -129,11 +124,6 @@ export abstract class BaseService<T extends BaseEntity>
     options.relations = options.relations
       ? options.relations
       : [...this.findOneDefaultRelations];
-
-    // const where = {
-    //   id: id,
-    //   ...options?.where,
-    // } as FindOptionsWhere<T>;
 
     const res = await manager.findOne(this.repository.metadata.target, options);
 

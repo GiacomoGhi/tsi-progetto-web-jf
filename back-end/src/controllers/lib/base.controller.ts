@@ -22,20 +22,16 @@ import {
 } from '@nestjs/swagger';
 import { ENTITY_TYPE_KEY, JwtAuthGuard } from '@common';
 import { BaseEntity, BaseService } from '../../services/index';
-import {
-  //   FilterOperator,
-  //   FilterType,
-  //   FilterValue,
-  Role,
-} from '@interfaces';
+import { Role } from '@interfaces';
 
 import { Roles } from './decorators/roles.decorator';
 import { BaseEntityDto } from './dto/base.entity.dto';
 import { AuthenticatedRequest } from './guards/authenticated-request.interface';
 import { RolesGuard } from './guards/roles.guard';
+import { union } from 'lodash';
 
-@ApiBearerAuth()
-@UseGuards(JwtAuthGuard, RolesGuard)
+//@ApiBearerAuth()
+//@UseGuards(JwtAuthGuard, RolesGuard)
 export class BaseController<
   T extends BaseEntity,
   TService extends BaseService<T>,
@@ -45,52 +41,6 @@ export class BaseController<
   protected entityDto: any;
 
   protected joinConfigurations = false;
-
-  // protected getUserFilters(req: AuthenticatedRequest): {
-  //   filters: FilterValue[];
-  //   join: string[];
-  // } {
-  //   const filters: FilterValue[] = [];
-  //   const join: string[] = [];
-
-  //   if (req.headers['x-client'] === 'app') {
-  //     filters.push({
-  //       field: 'active',
-  //       operator: FilterOperator.equals,
-  //       type: FilterType.boolean,
-  //       value: [true],
-  //     });
-
-  //     if (this.joinConfigurations) {
-  //       join.push('configurations');
-
-  //       filters.push({
-  //         field: 'configurations.active',
-  //         operator: FilterOperator.equals,
-  //         type: FilterType.boolean,
-  //         value: [true],
-  //       });
-  //     }
-  //   }
-
-  //   return {
-  //     filters,
-  //     join,
-  //   };
-  // }
-
-  // protected getUserFiltersAsOptions(
-  //   req: AuthenticatedRequest
-  // ): FindManyOptions<T> {
-  //   if (req.user.role === Role.User) {
-  //     return {
-  //       where: {
-  //         active: true,
-  //       },
-  //     } as FindManyOptions<T>;
-  //   }
-  //   return {};
-  // }
 
   constructor(
     protected service: TService,
@@ -142,14 +92,6 @@ export class BaseController<
             default: '',
           },
         },
-        filters: {
-          type: 'array',
-          default: [],
-          items: {
-            type: 'string',
-            default: '',
-          },
-        },
         orderBy: {
           type: 'object',
           default: {},
@@ -162,11 +104,10 @@ export class BaseController<
   async getPaged(
     @Body()
     body: {
-      // filters: FilterValue[];
-      // orderBy?: { [field: string]: 'asc' | 'desc' };
+      orderBy?: { [field: string]: 'asc' | 'desc' };
       take: number;
       skip: number;
-      // join: string[];
+      join: string[];
     },
     @Req()
     req: AuthenticatedRequest,
@@ -177,48 +118,20 @@ export class BaseController<
   protected async getPagedImplementation(
     req: AuthenticatedRequest,
     body: {
-      // filters: FilterValue[];
-      // orderBy?: { [field: string]: 'asc' | 'desc' } | undefined;
+      orderBy?: { [field: string]: 'asc' | 'desc' } | undefined;
       take: number;
       skip: number;
-      // join: string[];
+      join: string[];
     },
   ) {
-    // const userFilters = this.getUserFilters(req);
-
-    // // user's filters + body filters that aren't defined into user's filters
-    // const filters = [...userFilters.filters];
-    // body.filters.forEach((bf) => {
-    //   const filter = filters.find((f) => f.field === bf.field);
-    //   if (!filter) {
-    //     filters.push(bf);
-    //   }
-    // });
-
-    // if (
-    //   filters.some(
-    //     (f) =>
-    //       f.value.length === 0 &&
-    //       f.operator !== FilterOperator.blankOrEmpty &&
-    //       f.operator !== FilterOperator.notBlank &&
-    //       f.operator !== FilterOperator.blank
-    //   ) ||
-    //   filters.some(
-    //     (f) => f.value.length === 1 && f.operator === FilterOperator.inRange
-    //   )
-    // ) {
-    //   throw new BadRequestException('Formato filtri non corretto');
-    // }
-
-    // const join = union(body.join || [], userFilters.join);
+    const join = union(body.join || []);
 
     const res = await this.service.findPaged(
       body.take,
       body.skip,
-      // filters,
-      // body.orderBy,
-      // join,
-      // body.join != null // se vengono passate esplicitamente delle relations, sovrascrivo quelle base
+      body.orderBy,
+      join,
+      body.join != null, // se vengono passate esplicitamente delle relations, sovrascrivo quelle base
     );
 
     const dtos: TDto[] = [];
@@ -244,11 +157,7 @@ export class BaseController<
     req: AuthenticatedRequest,
     id: string,
   ) {
-    const item = await this.service.findOne(
-      id,
-      undefined,
-      // this.getUserFiltersAsOptions(req)
-    );
+    const item = await this.service.findOne(id, undefined);
 
     const dto: TDto = this.mapToDto(item);
 
@@ -262,7 +171,7 @@ export class BaseController<
       additionalProperties: true,
     },
   })
-  @Roles(Role.Admin)
+  //@Roles(Role.Admin)
   async create(
     @Body()
     entity: Partial<TDto>,
@@ -295,7 +204,7 @@ export class BaseController<
       additionalProperties: true,
     },
   })
-  @Roles(Role.Admin)
+  //@Roles(Role.Admin)
   async update(
     @Body()
     entity: Partial<TDto>,
@@ -325,7 +234,7 @@ export class BaseController<
   }
 
   @Delete(':id')
-  @Roles(Role.Admin)
+  //@Roles(Role.Admin)
   async delete(
     @Param('id') id: string,
     @Req()
@@ -341,12 +250,7 @@ export class BaseController<
       );
     }
 
-    await this.service.delete(
-      req.user.id,
-      id,
-      undefined,
-      // this.getUserFiltersAsOptions(req)
-    );
+    await this.service.delete(req.user.id, id, undefined);
   }
 
   protected mapToDto(item: T): TDto {

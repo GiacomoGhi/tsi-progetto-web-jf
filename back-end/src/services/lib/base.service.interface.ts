@@ -6,6 +6,9 @@ export interface BaseServiceInterface<T> {
   findPaged(
     take: number,
     skip: number,
+    orderBy?: { [field: string]: 'asc' | 'desc' },
+    join?: string[],
+    overwriteJoin?: boolean,
     manager?: EntityManager,
   ): Promise<PagedResult<T>>;
   findAll(options?: FindManyOptions<T>, manager?: EntityManager): Promise<T[]>;

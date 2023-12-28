@@ -27,12 +27,12 @@ function HomeView() {
   ]
   return (
     <div className="container-lg pt-4 px-4" id="claim">
-      <div className="row text-center text-white">
+      <div className="row text-center text-black">
         <h1 className="">Realtà Aumentata</h1>
         <h2 className="py-4 px-4">Veloce Introduzione all'uso della Realtà Aumentata nelle Applicazioni Web</h2>
       </div>
       <div className="row pb-5" id="homepage">
-        <div className="col-md-6 py-4 justify-content-center text-white">
+        <div className="col-md-6 py-4 justify-content-center text-black">
           <p className="">Da qui potrai:</p>
           <ul>
             <li>Capire cos'è la Realtà Aumentata</li>

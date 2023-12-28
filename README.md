@@ -11,6 +11,7 @@ In Visual Studio Code click the Extensions button in the Activity Bar and instal
 - ESLint
 - Prettier Code Formatter
 
+
 ## Dev Setup
 
 1. Install dependencies: npm install.
@@ -21,4 +22,9 @@ In Visual Studio Code click the Extensions button in the Activity Bar and instal
 
 4. Per avviare la web app: lanciare il comando npm run start nella root del progetto.
 
-## Stack tecnologico
+
+## Stack ARPNeT
+- Axios (API) + React (GUI)
+- PostgreSQL (on a Docker container)
+- NestJS (bak-end and front-end Node)
+- TypeScript (instad of JavaScript)

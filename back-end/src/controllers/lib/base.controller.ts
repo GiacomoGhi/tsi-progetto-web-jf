@@ -34,8 +34,8 @@ import { BaseEntityDto } from './dto/base.entity.dto';
 import { AuthenticatedRequest } from './guards/authenticated-request.interface';
 import { RolesGuard } from './guards/roles.guard';
 
-@ApiBearerAuth()
-@UseGuards(JwtAuthGuard, RolesGuard)
+//@ApiBearerAuth()
+//@UseGuards(JwtAuthGuard, RolesGuard)
 export class BaseController<
   T extends BaseEntity,
   TService extends BaseService<T>,

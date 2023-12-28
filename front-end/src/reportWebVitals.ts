@@ -1,6 +1,6 @@
 import { ReportHandler } from 'web-vitals'
 
-/* Test varizione */
+/* Test variazione   */
 
 const reportWebVitals = (onPerfEntry?: ReportHandler) => {
   if (onPerfEntry && onPerfEntry instanceof Function) {

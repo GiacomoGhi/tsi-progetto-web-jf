@@ -31,7 +31,7 @@ import { RolesGuard } from './guards/roles.guard';
 import { union } from 'lodash';
 
 //@ApiBearerAuth()
-//@UseGuards(JwtAuthGuard, RolesGuard)
+@UseGuards(JwtAuthGuard)
 export class BaseController<
   T extends BaseEntity,
   TService extends BaseService<T>,

@@ -6,9 +6,7 @@ import { UserController } from './user.controller';
 
 @Module({
   imports: [BackendServicesModule],
-  controllers: [
-    UserController,
-  ],
+  controllers: [UserController],
   providers: [Logger, CommonProfile],
   exports: [CommonProfile],
 })

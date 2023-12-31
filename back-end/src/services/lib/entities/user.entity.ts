@@ -14,6 +14,10 @@ export class UserEntity extends BaseEntity {
 
   @AutoMap()
   @Column('varchar')
+  passwordHash!: string;
+
+  @AutoMap()
+  @Column('varchar')
   name!: string;
 
   @AutoMap()

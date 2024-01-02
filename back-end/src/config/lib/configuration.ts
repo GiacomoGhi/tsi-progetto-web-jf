@@ -12,5 +12,6 @@ export default () => ({
     authBaseUrl: process.env['AUTH_BASE_URL'] ?? '',
     authClientId: process.env['AUTH_CLIENT_ID'] ?? '',
     authApplicationId: process.env['AUTH_APPLICATION_ID'] ?? '',
+    jwtSecret: process.env['JWT_SECRET'] ?? '',
   } as ConfigInterface,
 });

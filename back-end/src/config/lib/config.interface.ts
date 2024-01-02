@@ -9,4 +9,5 @@ export interface ConfigInterface {
   authClientId: string;
   authApplicationId: string;
   nodeEnv: string | 'local' | 'test' | 'prod';
+  jwtSecret: string;
 }

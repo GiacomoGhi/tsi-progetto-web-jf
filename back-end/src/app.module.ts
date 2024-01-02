@@ -10,8 +10,8 @@ import { BackendAuthModule } from './auth/lib/backend-auth.module';
 @Module({
   imports: [
     BackendConfigModule,
-    BackendControllersModule,
     BackendAuthModule.forRoot(),
+    BackendControllersModule,
     LoggerModule.forRoot({
       pinoHttp: {
         level: 'debug',

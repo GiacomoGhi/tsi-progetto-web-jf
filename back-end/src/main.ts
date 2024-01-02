@@ -20,6 +20,22 @@ async function bootstrap() {
     .setTitle('Tsi Progetto ing. sistemi web')
     .setDescription('Tsi Progetto ing. sistemi web')
     .setVersion('0.1.0')
+    .addBearerAuth({
+      type: 'http',
+      name: 'Authorization',
+      bearerFormat: 'Bearer',
+      scheme: 'Bearer',
+      in: 'Header',
+    })
+    .addBasicAuth(
+      {
+        type: 'apiKey',
+        description: 'x-api-key',
+        name: 'x-api-key',
+        in: 'header',
+      },
+      'x-api-key',
+    )
     .build();
 
   const document = SwaggerModule.createDocument(app, documentBuilder);

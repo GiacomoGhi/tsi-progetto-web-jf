@@ -55,29 +55,30 @@ export class AuthService {
     try {
       this.logger.debug('body: ' + JSON.stringify(body));
       const user = await this.userService.findOneByCondition({
-        //TODO always return false
         where: {
           email: body.email,
         },
       });
-      this.invalidCredentialsExeption(1);
+      userExist = true;
     } catch (error) {
-      const user = await this.userService.findAll();
-      this.logger.debug('users: ' + JSON.stringify(user));
-      const systemUserId = '10000000-0000-0000-0000-000000000001';
-      const passwordHash = await this.hashPassword(body.password);
+      if (!userExist) {
+        const user = await this.userService.findAll();
+        this.logger.debug('users: ' + JSON.stringify(user));
+        const systemUserId = '10000000-0000-0000-0000-000000000001';
+        const passwordHash = await this.hashPassword(body.password);
 
-      const userToAdd = {
-        id: randomUUID(),
-        email: body.email,
-        name: body.firstName,
-        surname: body.lastName,
-        passwordHash: passwordHash,
-        profession: body.profession,
-        active: true, //TODO set false as default and implement email verification
-      } as UserEntity;
+        const userToAdd = {
+          id: randomUUID(),
+          email: body.email,
+          name: body.firstName,
+          surname: body.lastName,
+          passwordHash: passwordHash,
+          profession: body.profession,
+          active: true, //TODO set false as default and implement email verification
+        } as UserEntity;
 
-      this.userService.insert(systemUserId, userToAdd);
+        this.userService.insert(systemUserId, userToAdd);
+      } else this.invalidCredentialsExeption(1);
     }
   }
 

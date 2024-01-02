@@ -27,15 +27,6 @@ async function bootstrap() {
       scheme: 'Bearer',
       in: 'Header',
     })
-    .addBasicAuth(
-      {
-        type: 'apiKey',
-        description: 'x-api-key',
-        name: 'x-api-key',
-        in: 'header',
-      },
-      'x-api-key',
-    )
     .build();
 
   const document = SwaggerModule.createDocument(app, documentBuilder);

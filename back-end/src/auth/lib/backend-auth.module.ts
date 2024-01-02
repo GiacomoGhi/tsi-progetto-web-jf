@@ -3,7 +3,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { AuthService } from './auth.service';
 import { BackendConfigModule, BackendConfigService } from '@config';
 import { JwtStrategy } from './jwt.strategy';
-import { JwtAuthGuard } from 'src/common/lib/guards/jwt-auth.guard';
+import { JwtAuthGuard } from 'src/auth/lib/jwt-auth.guard';
 import { BackendServicesModule, UserEntity, UserService } from '@services';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthController } from './auth.controller';

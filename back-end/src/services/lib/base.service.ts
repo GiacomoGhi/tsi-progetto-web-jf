@@ -162,13 +162,11 @@ export abstract class BaseService<T extends BaseEntity>
     manager: EntityManager = this.repository.manager,
   ): Promise<T> {
     if (entity.id == null) {
-      //TODO MARCOC
       //throw new BadRequestException();
       entity.id = uuidv4();
     }
 
     const entityToInsert = {
-      //TODO MARCOC: sistemare campi obbligatori/etc
       ...entity,
       createdByUserId: currentContextUserId,
     };

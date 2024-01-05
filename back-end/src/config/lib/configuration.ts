@@ -18,5 +18,6 @@ export default () => ({
     mailPassword: process.env['MAIL_PASSWORD'] ?? '',
     mailFrom: process.env['MAIL_FROM'] ?? '',
     mailTransport: process.env['MAIL_TRANSPORT'] ?? '',
+    baseApiUrl: process.env['BASE_API_URL'] ?? '',
   } as ConfigInterface,
 });

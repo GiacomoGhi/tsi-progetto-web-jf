@@ -15,4 +15,5 @@ export interface ConfigInterface {
   mailPassword: string;
   mailFrom: string;
   mailTransport: string;
+  baseApiUrl: string;
 }

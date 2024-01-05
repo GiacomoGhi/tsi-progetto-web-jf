@@ -1,12 +1,4 @@
-import {
-  Body,
-  Controller,
-  Get,
-  HttpCode,
-  Post,
-  Req,
-  UseGuards,
-} from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, Post, Query } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { UserSingUp } from 'src/common/lib/user-sing-up';
 import { ApiBody, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
@@ -71,5 +63,10 @@ export class AuthController {
       token_type: 'JWT',
       expires_in: 3600,
     };
+  }
+
+  @Get('confirm-email')
+  async confirmEmail(@Query('token') token: string) {
+    console.log('token: ' + token);
   }
 }

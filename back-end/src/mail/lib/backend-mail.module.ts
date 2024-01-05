@@ -35,7 +35,7 @@ import { BackendConfigModule, BackendConfigService } from '@config';
       },
     }),
   ],
-  providers: [MailService],
+  providers: [MailService, BackendConfigService],
   exports: [MailService],
 })
 export class BackendMailModule {}

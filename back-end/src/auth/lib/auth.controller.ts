@@ -30,7 +30,10 @@ export class AuthController {
     },
   })
   async create(@Body() user: UserSingUp) {
-    this.authService.create(user);
+    const res = await this.authService.create(user);
+    return {
+      status: res,
+    };
   }
 
   @Post('login')

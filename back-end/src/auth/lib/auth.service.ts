@@ -59,7 +59,6 @@ export class AuthService {
   async create(body: UserSingUp) {
     let userExist: boolean;
     try {
-      this.logger.debug('body: ' + JSON.stringify(body));
       const user = await this.userService.findOneByCondition({
         where: {
           email: body.email,
@@ -68,6 +67,9 @@ export class AuthService {
       userExist = true;
     } catch (error) {
       if (!userExist) {
+        if (!this.emailFormatValidator(body.email)) {
+          return this.invalidCredentialsExeption(2);
+        }
         const user = await this.userService.findAll();
         this.logger.debug('users: ' + JSON.stringify(user));
         const systemUserId = '10000000-0000-0000-0000-000000000001';
@@ -85,7 +87,8 @@ export class AuthService {
 
         this.userService.insert(systemUserId, userToAdd);
         this.mailService.sendUserConfirmation(userToAdd, userToAdd.id); // TODO set the correct token
-      } else this.invalidCredentialsExeption(1);
+        return 'success';
+      } else return this.invalidCredentialsExeption(1);
     }
   }
 
@@ -95,9 +98,16 @@ export class AuthService {
         throw new HttpException('Invalid Credentials', HttpStatus.UNAUTHORIZED);
       case 1:
         throw new HttpException('Email already in use', HttpStatus.CONFLICT);
+      case 2:
+        throw new HttpException('Ivalid email format', HttpStatus.CONFLICT);
       default:
         throw new HttpException('Error', HttpStatus.INTERNAL_SERVER_ERROR);
     }
+  }
+
+  emailFormatValidator(email: string) {
+    const emailRegex: RegExp = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
   }
 
   async generateJwt(user: AuthenticatedUser) {

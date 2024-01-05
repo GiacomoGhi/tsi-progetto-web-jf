@@ -67,6 +67,7 @@ export class AuthController {
 
   @Get('confirm-email')
   async confirmEmail(@Query('token') token: string) {
-    console.log('token: ' + token);
+    const res = await this.authService.validateEmail(token);
+    return res;
   }
 }

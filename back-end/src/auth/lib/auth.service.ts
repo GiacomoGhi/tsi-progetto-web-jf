@@ -85,11 +85,25 @@ export class AuthService {
           active: false,
         } as UserEntity;
 
-        this.userService.insert(systemUserId, userToAdd);
-        this.mailService.sendUserConfirmation(userToAdd, userToAdd.id); // TODO set the correct token
-        return 'success';
+        await this.userService.insert(systemUserId, userToAdd);
+        await this.mailService.sendUserConfirmation(userToAdd, userToAdd.id); // TODO set the correct token
+        return 'successfull registration';
       } else return this.invalidCredentialsExeption(1);
     }
+  }
+
+  async validateEmail(userId: string) {
+    const systemUserId = '10000000-0000-0000-0000-000000000001';
+    const user = await this.userService.findOneByCondition({
+      where: {
+        id: userId,
+      },
+    });
+
+    user.active = true;
+
+    await this.userService.update(systemUserId, user.id, user);
+    return 'email validation completed';
   }
 
   invalidCredentialsExeption(value: number) {

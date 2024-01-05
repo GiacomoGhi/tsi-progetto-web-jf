@@ -7,6 +7,7 @@ import { JwtAuthGuard } from 'src/auth/lib/jwt-auth.guard';
 import { BackendServicesModule, UserEntity, UserService } from '@services';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthController } from './auth.controller';
+import { BackendMailModule } from 'src/mail';
 
 @Module({})
 export class BackendAuthModule {
@@ -14,6 +15,7 @@ export class BackendAuthModule {
     return {
       module: BackendAuthModule,
       imports: [
+        BackendMailModule,
         TypeOrmModule.forFeature([UserEntity]),
         JwtModule.registerAsync({
           imports: [BackendConfigModule, BackendServicesModule],

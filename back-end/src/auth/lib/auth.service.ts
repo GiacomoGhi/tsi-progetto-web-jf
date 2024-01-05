@@ -30,6 +30,10 @@ export class AuthService {
       this.invalidCredentialsExeption(0);
     }
 
+    if (!user.active) {
+      this.invalidCredentialsExeption(0);
+    }
+
     const validPassword = await this.comparePasswords(
       body.password,
       user.passwordHash,

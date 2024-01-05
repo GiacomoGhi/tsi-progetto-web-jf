@@ -74,7 +74,7 @@ export class AuthService {
           surname: body.lastName,
           passwordHash: passwordHash,
           profession: body.profession,
-          active: true, //TODO set false as default and implement email verification
+          active: false,
         } as UserEntity;
 
         this.userService.insert(systemUserId, userToAdd);

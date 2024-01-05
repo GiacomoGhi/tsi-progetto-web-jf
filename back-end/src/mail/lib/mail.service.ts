@@ -13,7 +13,7 @@ export class MailService {
   async sendUserConfirmation(user: UserEntity, token: string) {
     const url = `${
       this.configService.getConfiguration().baseApiUrl
-    }auth/confirm-email`;
+    }auth/confirm-email?token=${token}`;
 
     await this.mailerService.sendMail({
       to: user.email,

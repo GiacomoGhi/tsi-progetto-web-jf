@@ -13,5 +13,10 @@ export default () => ({
     authClientId: process.env['AUTH_CLIENT_ID'] ?? '',
     authApplicationId: process.env['AUTH_APPLICATION_ID'] ?? '',
     jwtSecret: process.env['JWT_SECRET'] ?? '',
+    mailHost: process.env['MAIL_HOST'] ?? '',
+    mailUser: process.env['MAIL_USER'] ?? '',
+    mailPassword: process.env['MAIL_PASSWORD'] ?? '',
+    mailFrom: process.env['MAIL_FROM'] ?? '',
+    mailTransport: process.env['MAIL_TRANSPORT'] ?? '',
   } as ConfigInterface,
 });

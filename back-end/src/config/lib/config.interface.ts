@@ -10,4 +10,9 @@ export interface ConfigInterface {
   authApplicationId: string;
   nodeEnv: string | 'local' | 'test' | 'prod';
   jwtSecret: string;
+  mailHost: string;
+  mailUser: string;
+  mailPassword: string;
+  mailFrom: string;
+  mailTransport: string;
 }

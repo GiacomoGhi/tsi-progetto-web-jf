@@ -41,7 +41,7 @@ export class AuthService {
         email: user.email,
         firstName: user.name,
         lastName: user.surname,
-        role: 0, //TODO get role from user entity
+        role: user.role,
       };
 
       return await this.generateJwt(response);

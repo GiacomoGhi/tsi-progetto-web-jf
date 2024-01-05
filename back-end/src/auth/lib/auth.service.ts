@@ -8,6 +8,7 @@ import { UserService } from '@services';
 import { UserEntityDto } from 'src/controllers/lib/dto/user-entity.dto';
 import { randomUUID } from 'crypto';
 import { UserSingUp } from 'src/common/lib/user-sing-up';
+import { MailService } from 'src/mail/lib/mail.service';
 
 @Injectable()
 export class AuthService {
@@ -15,6 +16,7 @@ export class AuthService {
   constructor(
     private readonly jwtService: JwtService,
     private readonly userService: UserService,
+    private readonly mailService: MailService,
   ) {}
 
   async login(body: { email: string; password: string }) {
@@ -82,6 +84,7 @@ export class AuthService {
         } as UserEntity;
 
         this.userService.insert(systemUserId, userToAdd);
+        this.mailService.sendUserConfirmation(userToAdd, userToAdd.id); // TODO set the correct token
       } else this.invalidCredentialsExeption(1);
     }
   }

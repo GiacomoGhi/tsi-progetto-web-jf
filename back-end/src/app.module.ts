@@ -7,7 +7,7 @@ import { AutomapperModule } from '@automapper/nestjs';
 import { classes } from '@automapper/classes';
 import { CommonProfile } from './controllers';
 import { BackendAuthModule } from './auth/lib/backend-auth.module';
-import { MailModule } from './mail/mail.module';
+import { MailModule } from './mail/lib/backend-mail.module';
 @Module({
   imports: [
     BackendConfigModule,

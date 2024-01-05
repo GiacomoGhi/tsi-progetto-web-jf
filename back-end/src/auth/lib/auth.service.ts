@@ -20,7 +20,6 @@ export class AuthService {
   ) {}
 
   async login(body: { email: string; password: string }) {
-    this.logger.debug('body: ' + JSON.stringify(body));
     let user: UserEntity | null;
     try {
       user = await this.userService.findOneByCondition({
@@ -71,7 +70,6 @@ export class AuthService {
           return this.invalidCredentialsExeption(2);
         }
         const user = await this.userService.findAll();
-        this.logger.debug('users: ' + JSON.stringify(user));
         const systemUserId = '10000000-0000-0000-0000-000000000001';
         const passwordHash = await this.hashPassword(body.password);
 
@@ -82,6 +80,8 @@ export class AuthService {
           surname: body.lastName,
           passwordHash: passwordHash,
           profession: body.profession,
+          role: 0,
+          nickName: body.nickName,
           active: false,
         } as UserEntity;
 

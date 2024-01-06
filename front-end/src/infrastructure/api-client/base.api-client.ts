@@ -8,7 +8,9 @@ export abstract class BaseApiClient {
 
   protected get token() {
     const { cookie } = App
-    return cookie.getJwtToken()
+    const token = cookie.getJwtToken()
+
+    return token ? token : this.loginRedirect()
   }
 
   protected get baseUrl() {
@@ -18,7 +20,11 @@ export abstract class BaseApiClient {
 
   protected async checkSessionExpired(response: Response) {
     if (!response.ok && response.status === 401) {
-      window.location.href = '/login'
+      this.loginRedirect()
     }
+  }
+
+  private loginRedirect() {
+    window.location.href = '/login'
   }
 }

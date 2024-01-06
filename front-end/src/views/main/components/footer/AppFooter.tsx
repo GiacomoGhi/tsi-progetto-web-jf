@@ -10,7 +10,6 @@ function AppFooter() {
             <ul className="list-unstyled">
               <li>Giacomo Ghinelli</li>
               <li className="py-1">Fabio Tiralongo</li>
-              <li className="pd-0">Lisandro Antonioli</li>
             </ul>
           </div>
         </div>

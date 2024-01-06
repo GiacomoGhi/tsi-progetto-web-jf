@@ -9,6 +9,7 @@ import {
   Repository,
   SelectQueryBuilder,
 } from 'typeorm';
+//import { LoggedUser } from './secured-request.interface';
 import { v4 as uuidv4 } from 'uuid';
 
 import {
@@ -36,9 +37,16 @@ export abstract class BaseService<T extends BaseEntity>
   async findPaged(
     take: number,
     skip: number,
+    orderBy?: { [field: string]: 'asc' | 'desc' },
+    join: string[] = [],
+    overwriteJoin = false,
     manager: EntityManager = this.repository.manager,
   ): Promise<PagedResult<T>> {
-    let queryBuilder = manager.createQueryBuilder();
+    const relations = overwriteJoin
+      ? join
+      : [...this.findManyDefaultRelations, ...join];
+
+    let queryBuilder = this.buildQuerySelect(relations, orderBy, manager);
 
     // skip, take
     queryBuilder = queryBuilder.skip(skip).take(take);
@@ -149,18 +157,16 @@ export abstract class BaseService<T extends BaseEntity>
   }
 
   async insert(
-    currentContextUserId: string,
+    currentContextUserId: string | null,
     entity: Partial<T>,
     manager: EntityManager = this.repository.manager,
   ): Promise<T> {
     if (entity.id == null) {
-      //TODO MARCOC
       //throw new BadRequestException();
       entity.id = uuidv4();
     }
 
     const entityToInsert = {
-      //TODO MARCOC: sistemare campi obbligatori/etc
       ...entity,
       createdByUserId: currentContextUserId,
     };
@@ -204,6 +210,28 @@ export abstract class BaseService<T extends BaseEntity>
     } catch (error: any) {
       throw new BadRequestException(error, 'Delete Error');
     }
+  }
+
+  protected buildQuerySelect(
+    join: string[],
+    orderBy?: { [field: string]: 'asc' | 'desc' },
+    manager = this.repository.manager,
+  ): SelectQueryBuilder<T> {
+    const alias = this.repository.metadata.targetName;
+    let queryBuilder = manager
+      .createQueryBuilder<T>(
+        this.repository.metadata.target,
+        this.repository.metadata.targetName,
+      )
+      .select() as SelectQueryBuilder<T>;
+
+    queryBuilder = this.setJoin(alias, join, queryBuilder);
+
+    if (orderBy) {
+      queryBuilder = this.setOrderBy(alias, orderBy, queryBuilder);
+    }
+
+    return queryBuilder;
   }
 
   protected addJoin(

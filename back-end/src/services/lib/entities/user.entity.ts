@@ -14,6 +14,14 @@ export class UserEntity extends BaseEntity {
 
   @AutoMap()
   @Column('varchar')
+  passwordHash!: string;
+
+  @AutoMap()
+  @Column('varchar')
+  nickName!: string;
+
+  @AutoMap()
+  @Column('varchar')
   name!: string;
 
   @AutoMap()
@@ -23,6 +31,10 @@ export class UserEntity extends BaseEntity {
   @AutoMap()
   @Column('varchar', { nullable: true })
   profession: string | null;
+
+  @AutoMap()
+  @Column('numeric')
+  role!: number;
 
   @ManyToOne(() => UserEntity, { createForeignKeyConstraints: false })
   @AutoMap(() => UserEntity)

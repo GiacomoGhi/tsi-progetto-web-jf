@@ -6,9 +6,12 @@ import { BackendConfigModule, BackendConfigService } from './config';
 import { AutomapperModule } from '@automapper/nestjs';
 import { classes } from '@automapper/classes';
 import { CommonProfile } from './controllers';
+import { BackendAuthModule } from './auth/lib/backend-auth.module';
+import { BackendMailModule } from './mail/lib/backend-mail.module';
 @Module({
   imports: [
     BackendConfigModule,
+    BackendAuthModule.forRoot(),
     BackendControllersModule,
     LoggerModule.forRoot({
       pinoHttp: {
@@ -57,6 +60,8 @@ import { CommonProfile } from './controllers';
         };
       },
     }),
+
+    BackendMailModule,
   ],
   controllers: [],
   providers: [CommonProfile],

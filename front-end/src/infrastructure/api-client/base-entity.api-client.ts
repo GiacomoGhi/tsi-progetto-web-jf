@@ -11,8 +11,8 @@ export abstract class BaseEntityApiClient<T extends BaseDto> extends BaseApiClie
 
   async paged(request: BasePagedRequest): Promise<BaseResponse<PagedResultDto<T>>> {
     const httpRequestContent = {
-      take: request.to - request.from + 1, //request.from,
-      skip: request.from - 1, //request.to,
+      take: request.from,
+      skip: request.to,
       filters: [] as any,
       join: request.join,
       orderBy: {

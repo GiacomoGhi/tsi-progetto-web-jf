@@ -1,20 +1,20 @@
-import Cookies from 'universal-cookie'
+import Cookies from 'js-cookie'
 
 export default class JwtCookieService {
   protected name = 'jwt_auth'
-  protected cookies = new Cookies()
 
-  public getJwtToken(): string | null {
-    return this.cookies.get(this.name)
+  public getJwtToken(): string | undefined {
+    return Cookies.get(this.name)
   }
 
-  public setJwtToken(token: string, expriation: number) {
-    this.cookies.set(this.name, token, {
-      expires: new Date(expriation * 1000) // shifts milliseconds in seconds
-    })
+  public setJwtToken(token: string, expiration: number) {
+    const expirationDate = new Date()
+    expirationDate.setTime(expirationDate.getTime() + expiration * 1000)
+
+    Cookies.set(this.name, token, { expires: expirationDate })
   }
 
   public removeJwtToken() {
-    this.cookies.remove(this.name)
+    Cookies.remove(this.name)
   }
 }

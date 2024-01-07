@@ -12,8 +12,11 @@ export class AuthService {
 
   public async singup(httpRequestContent: SingUpFormDto) {
     try {
-      const response = await fetch(`${this.baseUrl}/auth/login`, {
+      const response = await fetch(`${this.baseUrl}/auth/sing-up`, {
         method: 'POST',
+        headers: {
+          'Content-type': 'application/json; charset=UTF-8'
+        },
         body: JSON.stringify(httpRequestContent)
       })
 
@@ -34,6 +37,9 @@ export class AuthService {
     try {
       const response = await fetch(`${this.baseUrl}/auth/login`, {
         method: 'POST',
+        headers: {
+          'Content-type': 'application/json; charset=UTF-8'
+        },
         body: JSON.stringify(httpRequestContent)
       })
 

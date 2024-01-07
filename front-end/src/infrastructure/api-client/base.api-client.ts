@@ -25,6 +25,6 @@ export abstract class BaseApiClient {
   }
 
   private loginRedirect() {
-    window.location.href = '/login'
+    //window.location.href = '/login'
   }
 }

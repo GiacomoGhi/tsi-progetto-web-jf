@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import {
   CreatingARWebsiteWithARJS,
   ARBodySystems,
@@ -11,6 +11,7 @@ import {
   RemoteSupport,
   Scarpe
 } from 'assets'
+import App from 'App'
 
 function HomeView() {
   const imgPaths = [
@@ -25,6 +26,20 @@ function HomeView() {
     RemoteSupport,
     Scarpe
   ]
+
+  const fetchItems = async () => {
+    const { apiClient } = App
+    const res = await apiClient.users.paged({
+      from: 1,
+      to: 20
+    })
+    console.log(res)
+  }
+
+  useEffect(() => {
+    fetchItems()
+  }, [])
+
   return (
     <div className="container-lg pt-4 px-4" id="claim">
       <div className="row text-center text-black">

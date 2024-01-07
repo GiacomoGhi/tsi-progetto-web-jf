@@ -11,7 +11,6 @@ export interface ApiClientService {
 class App {
   private static instance: App
 
-  // Singleton implementation
   public static getInstance() {
     if (!App.instance) {
       const appName = 'jf-tsi-progetto'
@@ -31,8 +30,6 @@ class App {
   public displayName: string
 
   public version: string
-
-  // public auth!: AuthService
 
   public apiClient!: ApiClientService
 
@@ -62,8 +59,8 @@ class App {
   private async configureServices(): Promise<boolean> {
     let result = true
 
-    result = result && (await this.configureApiClientService())
     result = result && (await this.configureJwtCookieService())
+    result = result && (await this.configureApiClientService())
 
     return result
   }
@@ -75,7 +72,6 @@ class App {
       appInitialized = await this.configureServices()
 
       if (appInitialized) {
-        //this.promoOfTheDay = PromoUtils.getPromoOfTheDay()
         console.log('App initialized.')
       } else {
         console.log('An error occured initializing app.')

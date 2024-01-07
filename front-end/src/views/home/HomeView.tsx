@@ -11,6 +11,7 @@ import {
   RemoteSupport,
   Scarpe
 } from 'assets'
+import App from 'App'
 
 function HomeView() {
   const imgPaths = [
@@ -25,6 +26,24 @@ function HomeView() {
     RemoteSupport,
     Scarpe
   ]
+
+  const testFunction = async () => {
+    const { auth, apiClient } = App
+
+    const res = await auth.login('giacomoghinelli9@gmail.com', 'string')
+    console.log('auth: ' + res)
+
+    const user = await apiClient.users.paged({
+      from: 1,
+      to: 20
+    })
+
+    console.log('user: ' + user)
+  }
+
+  useEffect(() => {
+    testFunction()
+  }, [])
 
   return (
     <div className="container-lg pt-4 px-4" id="claim">

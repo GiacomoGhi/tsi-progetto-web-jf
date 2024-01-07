@@ -2,9 +2,9 @@ import JwtCookieService from 'infrastructure/cookies/JwtCookieService'
 import pack from '../package.json'
 import { AuthApiClient } from './infrastructure/api-client/auth.api-client'
 import { UserApiClient } from 'infrastructure/api-client/user.api-client'
+import { AuthService } from 'infrastructure/auth/AuthService'
 
 export interface ApiClientService {
-  auth: AuthApiClient
   users: UserApiClient
 }
 
@@ -35,6 +35,8 @@ class App {
 
   public cookie!: JwtCookieService
 
+  public auth!: AuthService
+
   private constructor(name: string, displayName: string, version: string) {
     this.name = name
     this.version = version
@@ -49,9 +51,14 @@ class App {
 
   private async configureApiClientService(): Promise<boolean> {
     this.apiClient = {
-      users: new UserApiClient('user'),
-      auth: new AuthApiClient('auth')
+      users: new UserApiClient('user')
     }
+    return true
+  }
+
+  private async configureAuthService(): Promise<boolean> {
+    this.auth = new AuthService()
+
     return true
   }
 
@@ -60,6 +67,7 @@ class App {
 
     result = result && (await this.configureJwtCookieService())
     result = result && (await this.configureApiClientService())
+    result = result && (await this.configureAuthService())
 
     return result
   }

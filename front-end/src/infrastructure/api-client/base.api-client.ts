@@ -14,7 +14,9 @@ export abstract class BaseApiClient {
   }
 
   protected get baseUrl() {
-    const apiUrl = process.env['BASE_API_URL'] ?? ''
+    const apiUrl = process.env.REACT_APP_BASE_API_URL || ''
+    console.log(apiUrl)
+
     return `${apiUrl}/${this.controllerUrl}`
   }
 

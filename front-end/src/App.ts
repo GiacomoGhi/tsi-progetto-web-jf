@@ -39,7 +39,6 @@ class App {
     this.name = name
     this.version = version
     this.displayName = displayName
-    console.log(version)
   }
 
   private async configureJwtCookieService(): Promise<boolean> {

@@ -15,14 +15,13 @@ function MainView() {
     if (!isInitialized) {
       setLoading(true)
 
-      const res = await App.initialize()
-
-      console.log(res)
+      await App.initialize()
 
       setLoading(false)
     }
   }, [isInitialized])
 
+  // TODO add a real loader component
   const loader = (
     <div>
       <h1>Loading ...</h1>

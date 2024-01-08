@@ -41,3 +41,5 @@ package-lock.json
 *.bmpr
 *.docx
 *.tmp
+*.lun
+JF2024-WEB.ddl

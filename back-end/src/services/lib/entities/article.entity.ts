@@ -2,8 +2,8 @@ import { Column, Entity, ManyToOne } from 'typeorm';
 
 import { AutoMap } from '@automapper/classes';
 
-import { BaseEntity } from './base.entity';
 import { UserEntity } from './user.entity';
+import { BaseEntity } from './base.entity';
 
 @Entity({
   name: 'article',
@@ -20,6 +20,14 @@ export class ArticleEntity extends BaseEntity {
   @AutoMap()
   @Column('text', { nullable: true })
   image: string;
+
+  @AutoMap()
+  @Column('text', { nullable: true })
+  liked: number;
+
+  @AutoMap()
+  @Column('text', { nullable: true })
+  inNews: boolean;
 
   @ManyToOne(() => UserEntity, { createForeignKeyConstraints: false })
   @AutoMap(() => UserEntity)

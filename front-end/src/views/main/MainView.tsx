@@ -46,12 +46,12 @@ function MainView() {
           <main>
             <div className="root" id="app">
               <Routes>
+                <Route path="/" element={<HomeView />} />
+                <Route path="/news" element={<NewsView />} />
                 <Route element={<PrivateRoute />}>
                   <Route path="/community" element={<CommunityView />} />
                   <Route path="/profile" element={<ProfileView />} />
                 </Route>
-                <Route path="/" element={<HomeView />} />
-                <Route path="/news" element={<NewsView />} />
               </Routes>
             </div>
           </main>

@@ -11,6 +11,8 @@ import { DictionaryEntity } from './entities/dictionary.entity';
 import { DictionaryService } from './dictionary.service';
 import { HitEntity } from './entities/hit.entity';
 import { HitService } from './hit.service';
+import { PostEntity } from './entities/post.entity';
+import { PostService } from './post.service';
 
 @Module({
   imports: [
@@ -19,6 +21,7 @@ import { HitService } from './hit.service';
       ArticleEntity,
       DictionaryEntity,
       HitEntity,
+      PostEntity,
     ]),
     BackendConfigModule,
     // BackendClientsModule,
@@ -31,6 +34,7 @@ import { HitService } from './hit.service';
     ArticleService,
     DictionaryService,
     HitService,
+    PostService,
   ],
 
   exports: [
@@ -39,6 +43,7 @@ import { HitService } from './hit.service';
     ArticleService,
     DictionaryService,
     HitService,
+    PostService,
   ],
 })
 export class BackendServicesModule {}

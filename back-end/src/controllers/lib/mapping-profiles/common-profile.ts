@@ -11,6 +11,7 @@ import {
   ArticleEntity,
   DictionaryEntity,
   HitEntity,
+  PostEntity,
   UserEntity,
 } from '../../../services/index';
 
@@ -18,6 +19,7 @@ import { UserEntityDto } from '../dto/user-entity.dto';
 import { ArticleEntityDto } from '../dto/article.entity.dto';
 import { DictionaryEntityDto } from '../dto/dictionary.entity.dto';
 import { HitEntityDto } from '../dto/hit.entity.dto';
+import { PostEntityDto } from '../dto/post.entity.dto';
 
 @Injectable()
 export class CommonProfile extends AutomapperProfile {
@@ -85,6 +87,23 @@ export class CommonProfile extends AutomapperProfile {
         mapper,
         HitEntity,
         HitEntityDto,
+        forMember(
+          (t) => t.createdByUserEmail,
+          mapFrom((s) => s.createdByUser?.email),
+        ),
+        forMember(
+          (t) => t.lastModifiedByUserEmail,
+          mapFrom((s) => s.lastModifiedByUser?.email),
+        ),
+      );
+
+      //Application POST
+      createMap(mapper, PostEntityDto, PostEntity);
+
+      createMap(
+        mapper,
+        PostEntity,
+        PostEntityDto,
         forMember(
           (t) => t.createdByUserEmail,
           mapFrom((s) => s.createdByUser?.email),

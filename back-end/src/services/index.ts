@@ -12,3 +12,5 @@ export * from './lib/dictionary.service';
 export * from './lib/entities/dictionary.entity';
 export * from './lib/hit.service';
 export * from './lib/entities/hit.entity';
+export * from './lib/post.service';
+export * from './lib/entities/post.entity';

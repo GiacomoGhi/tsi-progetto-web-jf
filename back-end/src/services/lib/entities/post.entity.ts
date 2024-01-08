@@ -5,16 +5,20 @@ import { UserEntity } from './user.entity';
 import { BaseEntity } from './base.entity';
 
 @Entity({
-  name: 'dictionary',
+  name: 'post',
 })
-export class DictionaryEntity extends BaseEntity {
+export class PostEntity extends BaseEntity {
   @AutoMap()
   @Column('varchar')
-  listKey!: string;
+  description!: string;
 
   @AutoMap()
   @Column('varchar')
-  listValue!: string;
+  author!: string;
+
+  @AutoMap()
+  @Column('varchar')
+  topic!: string;
 
   @ManyToOne(() => UserEntity, { createForeignKeyConstraints: false })
   @AutoMap(() => UserEntity)

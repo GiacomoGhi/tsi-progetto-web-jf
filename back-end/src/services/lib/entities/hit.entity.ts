@@ -5,7 +5,7 @@ import { UserEntity } from './user.entity';
 import { BaseEntity } from './base.entity';
 
 @Entity({
-  name: 'user',
+  name: 'hit',
 })
 export class HitEntity extends BaseEntity {
   @AutoMap()

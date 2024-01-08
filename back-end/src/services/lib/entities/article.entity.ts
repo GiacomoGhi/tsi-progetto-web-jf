@@ -19,7 +19,7 @@ export class ArticleEntity extends BaseEntity {
 
   @AutoMap()
   @Column('text', { nullable: true })
-  image: string;
+  image: Blob;
 
   @AutoMap()
   @Column('text', { nullable: true })
@@ -27,7 +27,7 @@ export class ArticleEntity extends BaseEntity {
 
   @AutoMap()
   @Column('text', { nullable: true })
-  inNews: boolean;
+  isNews: boolean;
 
   @ManyToOne(() => UserEntity, { createForeignKeyConstraints: false })
   @AutoMap(() => UserEntity)

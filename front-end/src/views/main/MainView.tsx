@@ -8,6 +8,7 @@ import App from 'App'
 import NewsView from 'views/news/NewsView'
 import CommunityView from 'views/community/CommunityView'
 import ProfileView from 'views/profile/ProfileView'
+import PrivateRoute from './components/private-route/PrivateRoute'
 
 function MainView() {
   const { isInitialized } = App
@@ -45,10 +46,12 @@ function MainView() {
           <main>
             <div className="root" id="app">
               <Routes>
+                <Route element={<PrivateRoute />}>
+                  <Route path="/community" element={<CommunityView />} />
+                  <Route path="/profile" element={<ProfileView />} />
+                </Route>
                 <Route path="/" element={<HomeView />} />
                 <Route path="/news" element={<NewsView />} />
-                <Route path="/community" element={<CommunityView />} />
-                <Route path="/profile" element={<ProfileView />} />
               </Routes>
             </div>
           </main>

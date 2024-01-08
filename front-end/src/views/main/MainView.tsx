@@ -11,18 +11,26 @@ import ProfileView from 'views/profile/ProfileView'
 import PrivateRoute from './components/private-route/PrivateRoute'
 
 function MainView() {
-  const { isInitialized } = App
+  const { isInitialized, apiClient } = App
 
   const [loading, setLoading] = useState(true)
+  const [isAtuh, setIsAuth] = useState(false)
 
   const initializeApp = useCallback(async () => {
     if (!isInitialized) {
       setLoading(true)
 
       await App.initialize()
-
-      setLoading(false)
     }
+
+    if (isInitialized) {
+      const response = await apiClient.loggedUser.check()
+
+      if (!response.hasErrors && response.data && !response.data.error) {
+        setIsAuth(true)
+      }
+    }
+    setLoading(false)
   }, [isInitialized])
 
   // TODO add a real loader component
@@ -48,7 +56,7 @@ function MainView() {
               <Routes>
                 <Route path="/" element={<HomeView />} />
                 <Route path="/news" element={<NewsView />} />
-                <Route element={<PrivateRoute />}>
+                <Route element={<PrivateRoute isAuth={isAtuh} />}>
                   <Route path="/community" element={<CommunityView />} />
                   <Route path="/profile" element={<ProfileView />} />
                 </Route>

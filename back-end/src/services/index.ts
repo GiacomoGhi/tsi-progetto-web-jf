@@ -8,3 +8,5 @@ export * from './lib/user.service';
 export * from './lib/status.service';
 export * from './lib/article.service';
 export * from './lib/entities/article.entity';
+export * from './lib/dictionary.service';
+export * from './lib/entities/dictionary.entity';

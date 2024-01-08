@@ -53,6 +53,23 @@ export class CommonProfile extends AutomapperProfile {
           mapFrom((s) => s.lastModifiedByUser?.email),
         ),
       );
+
+      //Application Dictionary
+      createMap(mapper, ArticleEntityDto, ArticleEntity);
+
+      createMap(
+        mapper,
+        ArticleEntity,
+        ArticleEntityDto,
+        forMember(
+          (t) => t.createdByUserEmail,
+          mapFrom((s) => s.createdByUser?.email),
+        ),
+        forMember(
+          (t) => t.lastModifiedByUserEmail,
+          mapFrom((s) => s.lastModifiedByUser?.email),
+        ),
+      );
     };
   }
 }

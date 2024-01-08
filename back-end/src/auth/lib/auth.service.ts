@@ -19,6 +19,22 @@ export class AuthService {
     private readonly mailService: MailService,
   ) {}
 
+  async getUser(token: string) {
+    const userInfo = this.jwtService.decode(token) as AuthenticatedUser;
+    try {
+      const user = await this.userService.findOneByCondition({
+        where: {
+          id: userInfo.id,
+        },
+      });
+      return user;
+    } catch (error) {
+      return {
+        error: 'user not found',
+      };
+    }
+  }
+
   async login(body: { email: string; password: string }) {
     let user: UserEntity | null;
     try {

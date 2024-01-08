@@ -9,10 +9,17 @@ import { StatusService } from './status.service';
 import { ArticleService } from './article.service';
 import { DictionaryEntity } from './entities/dictionary.entity';
 import { DictionaryService } from './dictionary.service';
+import { HitEntity } from './entities/hit.entity';
+import { HitService } from './hit.service';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([UserEntity, ArticleEntity, DictionaryEntity]),
+    TypeOrmModule.forFeature([
+      UserEntity,
+      ArticleEntity,
+      DictionaryEntity,
+      HitEntity,
+    ]),
     BackendConfigModule,
     // BackendClientsModule,
   ],
@@ -23,8 +30,15 @@ import { DictionaryService } from './dictionary.service';
     StatusService,
     ArticleService,
     DictionaryService,
+    HitService,
   ],
 
-  exports: [UserService, StatusService, ArticleService, DictionaryService],
+  exports: [
+    UserService,
+    StatusService,
+    ArticleService,
+    DictionaryService,
+    HitService,
+  ],
 })
 export class BackendServicesModule {}

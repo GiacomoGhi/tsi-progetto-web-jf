@@ -10,3 +10,5 @@ export * from './lib/article.service';
 export * from './lib/entities/article.entity';
 export * from './lib/dictionary.service';
 export * from './lib/entities/dictionary.entity';
+export * from './lib/hit.service';
+export * from './lib/entities/hit.entity';

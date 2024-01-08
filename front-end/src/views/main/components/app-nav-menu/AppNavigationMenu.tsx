@@ -4,9 +4,6 @@ import { LogoBlu } from 'assets'
 import { Link } from 'react-router-dom'
 
 function AppNavigationMenu() {
-  //TODO
-  // Qui si può applicare il codice per far scomparire il menu
-  // quando si scrolla in basso
   const handleLinkClick = () => {
     const closeButton = document.getElementById('closeButton')
     if (closeButton) {

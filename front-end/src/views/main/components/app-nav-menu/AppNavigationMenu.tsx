@@ -57,17 +57,17 @@ function AppNavigationMenu() {
                       </Link>
                     </li>
                     <li className="nav-item me-4 mb-1">
-                      <Link to="/" className="p-3 nav-link text-white text-center">
+                      <Link to="/news" className="p-3 nav-link text-white text-center">
                         News
                       </Link>
                     </li>
                     <li className="nav-item me-4 mb-1">
-                      <Link to="/" className="p-3 nav-link text-white text-center">
-                        Subscribe
+                      <Link to="/community" className="p-3 nav-link text-white text-center">
+                        Community
                       </Link>
                     </li>
                     <li className="nav-item me-4 mb-1">
-                      <Link to="/" className="p-3 nav-link text-white text-center">
+                      <Link to="/profile" className="p-3 nav-link text-white text-center">
                         Profile
                       </Link>
                     </li>

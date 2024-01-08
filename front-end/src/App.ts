@@ -6,6 +6,7 @@ import { AuthService } from 'infrastructure/auth/AuthService'
 
 export interface ApiClientService {
   users: UserApiClient
+  loggedUser: AuthApiClient
 }
 
 class App {
@@ -51,7 +52,8 @@ class App {
 
   private async configureApiClientService(): Promise<boolean> {
     this.apiClient = {
-      users: new UserApiClient('user')
+      users: new UserApiClient('user'),
+      loggedUser: new AuthApiClient('auth/me')
     }
     return true
   }

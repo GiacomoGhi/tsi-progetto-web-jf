@@ -1,10 +1,10 @@
 import { BaseApiClient } from './base.api-client'
 
 export class AuthApiClient extends BaseApiClient {
-  async getUser() {
+  async check() {
     //http://localhost:3333/api/v1/auth/me
     try {
-      const response = await fetch(`${this.baseUrl}/me`, {
+      const response = await fetch(`${this.baseUrl}`, {
         method: 'GET',
         headers: {
           Authorization: 'Bearer ' + this.token,

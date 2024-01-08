@@ -58,22 +58,17 @@ function AppNavigationMenu() {
                     </li>
                     <li className="nav-item me-4 mb-1">
                       <Link to="/" className="p-3 nav-link text-white text-center">
-                        Impara
+                        News
                       </Link>
                     </li>
                     <li className="nav-item me-4 mb-1">
                       <Link to="/" className="p-3 nav-link text-white text-center">
-                        Iscriviti
+                        Subscribe
                       </Link>
                     </li>
                     <li className="nav-item me-4 mb-1">
                       <Link to="/" className="p-3 nav-link text-white text-center">
-                        Bacheca
-                      </Link>
-                    </li>
-                    <li className="nav-item me-4 mb-1">
-                      <Link to="/" className="p-3 nav-link text-white text-center">
-                        Novità
+                        Profile
                       </Link>
                     </li>
                   </ul>

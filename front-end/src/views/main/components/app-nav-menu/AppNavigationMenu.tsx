@@ -7,6 +7,12 @@ function AppNavigationMenu() {
   //TODO
   // Qui si può applicare il codice per far scomparire il menu
   // quando si scrolla in basso
+  const handleLinkClick = () => {
+    const closeButton = document.getElementById('closeButton')
+    if (closeButton) {
+      closeButton.click()
+    }
+  }
   return (
     <div className="container-fluid rounded-bottom-4 z-3 ps-5 navBar">
       <div className="row my-0 py-0 ">
@@ -26,6 +32,7 @@ function AppNavigationMenu() {
                 />
               </a>
               <button
+                id="closeButton"
                 className="navbar-toggler navLink"
                 type="button"
                 data-bs-toggle="offcanvas"
@@ -52,22 +59,22 @@ function AppNavigationMenu() {
                 <div className="offcanvas-body" id="nav_bar">
                   <ul className="navbar-nav justify-content-end flex-grow-1 pe-3">
                     <li className="nav-item me-4 mb-1">
-                      <Link to="/" className="p-3 nav-link text-white text-center">
+                      <Link to="/" className="p-3 nav-link text-white text-center" onClick={handleLinkClick}>
                         Home
                       </Link>
                     </li>
                     <li className="nav-item me-4 mb-1">
-                      <Link to="/news" className="p-3 nav-link text-white text-center">
+                      <Link to="/news" className="p-3 nav-link text-white text-center" onClick={handleLinkClick}>
                         News
                       </Link>
                     </li>
                     <li className="nav-item me-4 mb-1">
-                      <Link to="/community" className="p-3 nav-link text-white text-center">
+                      <Link to="/community" className="p-3 nav-link text-white text-center" onClick={handleLinkClick}>
                         Community
                       </Link>
                     </li>
                     <li className="nav-item me-4 mb-1">
-                      <Link to="/profile" className="p-3 nav-link text-white text-center">
+                      <Link to="/profile" className="p-3 nav-link text-white text-center" onClick={handleLinkClick}>
                         Profile
                       </Link>
                     </li>

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useRef } from 'react'
 import './AppNavigationMenu.style.scss'
 import { LogoBlu } from 'assets'
 import { Link } from 'react-router-dom'
@@ -7,7 +7,15 @@ function AppNavigationMenu() {
   const handleLinkClick = () => {
     const closeButton = document.getElementById('closeButton')
     if (closeButton) {
-      closeButton.click()
+      const observer = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            closeButton.click()
+          }
+        })
+      })
+
+      observer.observe(closeButton)
     }
   }
   return (

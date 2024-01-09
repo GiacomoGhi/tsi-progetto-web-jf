@@ -1,0 +1,22 @@
+.modalContainer {
+  padding: 10px;
+}
+
+.button {
+  margin: 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: none;
+  background: none;
+  color: blue;
+  text-decoration: underline;
+  cursor: pointer;
+
+  &:hover,
+  &:focus {
+    text-decoration: none;
+    color: darkblue;
+  }
+}

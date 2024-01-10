@@ -29,12 +29,6 @@ const LoginForm: React.FC<{ onSuccess: () => void }> = ({ onSuccess }) => {
     }
   }
 
-  //TODO handle error
-  //TODO rerun authme on success
-  /**
-   * transfer is auth state to App instance
-   */
-
   return (
     <div>
       <form onSubmit={handleSubmit}>
@@ -60,7 +54,7 @@ const LoginForm: React.FC<{ onSuccess: () => void }> = ({ onSuccess }) => {
             required
           />
         </div>
-        {failedLogin && <p style={{ color: 'red' }}>Wrong email or password</p>}
+        {failedLogin && <p className="errorMessage">Wrong email or password</p>}
         <button className="button" type="submit">
           Accedi
         </button>

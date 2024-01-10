@@ -9,12 +9,14 @@ import NewsView from 'views/news/NewsView'
 import CommunityView from 'views/community/CommunityView'
 import ProfileView from 'views/profile/ProfileView'
 import PrivateRoute from './components/private-route/PrivateRoute'
+import LoginSingupWrapper from 'components/login-singup-wrapper/LoginSingupWrapper'
 
 function MainView() {
   const { isInitialized, apiClient } = App
 
   const [loading, setLoading] = useState(true)
-  const [isAtuh, setIsAuth] = useState(false)
+  const [isAuth, setIsAuth] = useState(false)
+  const [renderLogin, setRenderLogin] = useState(false)
 
   const initializeApp = useCallback(async () => {
     if (!isInitialized) {
@@ -23,15 +25,32 @@ function MainView() {
       await App.initialize()
     }
 
-    if (isInitialized) {
-      const response = await apiClient.loggedUser.check()
+    // if (isInitialized) {
+    //   const response = await apiClient.loggedUser.check()
 
-      if (!response.hasErrors && response.data && !response.data.error) {
-        setIsAuth(true)
-      }
-    }
+    //   if (!response.hasErrors && response.data && !response.data.error) {
+    //     setIsAuth(true)
+    //   }
+    // }
     setLoading(false)
   }, [isInitialized])
+
+  const handleSuccess = async () => {
+    const response = await apiClient.loggedUser.check()
+
+    if (!response.hasErrors && response.data && !response.data.error) {
+      setIsAuth(true)
+      setRenderLogin(false)
+    }
+  }
+
+  const handleFail = () => {
+    setRenderLogin(true)
+  }
+
+  const handleClose = () => {
+    setRenderLogin(false)
+  }
 
   // TODO add a real loader component
   const loader = (
@@ -56,11 +75,12 @@ function MainView() {
               <Routes>
                 <Route path="/" element={<HomeView />} />
                 <Route path="/news" element={<NewsView />} />
-                <Route element={<PrivateRoute isAuth={isAtuh} />}>
+                <Route element={<PrivateRoute isAuth={isAuth} onFail={handleFail} />}>
                   <Route path="/community" element={<CommunityView />} />
                   <Route path="/profile" element={<ProfileView />} />
                 </Route>
               </Routes>
+              <LoginSingupWrapper active={renderLogin} onSuccess={handleSuccess} onClose={handleClose} />
             </div>
           </main>
           <AppFooter />

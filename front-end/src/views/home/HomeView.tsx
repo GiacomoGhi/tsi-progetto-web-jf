@@ -29,7 +29,6 @@ function HomeView() {
 
   return (
     <>
-      <LoginSingupWrapper />
       <div className="container-lg pt-4 px-4" id="claim">
         <div className="row text-center text-black">
           <h1 className="">Realtà Aumentata</h1>

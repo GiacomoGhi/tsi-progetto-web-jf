@@ -74,6 +74,10 @@ class App {
     return result
   }
 
+  public async loadState(invert: boolean) {
+    return !invert
+  }
+
   public async initialize(): Promise<boolean> {
     let appInitialized = false
 

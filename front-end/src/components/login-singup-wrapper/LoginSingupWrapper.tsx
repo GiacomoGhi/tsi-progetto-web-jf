@@ -3,35 +3,32 @@ import './LoginSingupWrapper.styles.scss'
 import React, { useCallback, useEffect, useState } from 'react'
 import LoginForm from 'components/login-from/LoginForm'
 
-const LoginSingupWrapper = () => {
-  const urlParams = new URLSearchParams(window.location.search).get('login')
-  const [renderLoginForm, setRenderLoginForm] = useState(false)
-
+const LoginSingupWrapper: React.FC<{ onClose: () => void; onSuccess: () => void; active: boolean }> = ({
+  onSuccess,
+  active,
+  onClose
+}) => {
   const handleClose = () => {
-    const newUrl = window.location.href.split('?')[0]
-    window.history.replaceState({}, document.title, newUrl)
-    setRenderLoginForm(false)
+    onClose()
   }
 
-  useEffect(() => {
-    if (urlParams) {
-      setRenderLoginForm(true)
-    }
-  }, [urlParams])
+  const handleLogin = () => {
+    onSuccess()
+  }
 
   const renderModal = useCallback(() => {
     return (
-      <Modal isOpen={renderLoginForm} onClose={handleClose}>
+      <Modal isOpen={active} onClose={handleClose}>
         <div className="modalContainer">
           <h1>Welcome</h1>
-          <LoginForm />
+          <LoginForm onSuccess={handleLogin} />
           <div>
             <button className="button">Registrati</button>
           </div>
         </div>
       </Modal>
     )
-  }, [renderLoginForm])
+  }, [active])
 
   return renderModal()
 }

@@ -2,7 +2,7 @@ import React, { ChangeEvent, FormEvent, useState } from 'react'
 import './LoginForm.styles.scss'
 import App from 'App'
 
-const LoginForm = () => {
+const LoginForm: React.FC<{ onSuccess: () => void }> = ({ onSuccess }) => {
   const [formData, setFormData] = useState({
     email: '',
     password: ''
@@ -22,7 +22,9 @@ const LoginForm = () => {
   const login = async () => {
     const { auth } = App
     const res = await auth.login(formData.email, formData.password)
-    console.log(res)
+    if (res) {
+      onSuccess()
+    }
   }
 
   return (

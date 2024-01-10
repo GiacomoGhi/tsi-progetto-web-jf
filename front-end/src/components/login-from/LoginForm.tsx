@@ -1,4 +1,4 @@
-import React, { ChangeEvent, FormEvent, useState } from 'react'
+import React, { FormEvent, useState } from 'react'
 import './LoginForm.styles.scss'
 import App from 'App'
 
@@ -15,17 +15,14 @@ const LoginForm: React.FC<{ onSuccess: () => void }> = ({ onSuccess }) => {
     login()
   }
 
-  const handleFail = () => {
-    setFailedLogin(true)
-  }
-
   const login = async () => {
+    setFailedLogin(false)
     const { auth } = App
     const res = await auth.login(formData.email, formData.password)
     if (res) {
       onSuccess()
     } else {
-      handleFail()
+      setFailedLogin(true)
     }
   }
 

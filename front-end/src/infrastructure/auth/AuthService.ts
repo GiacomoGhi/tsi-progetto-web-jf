@@ -49,7 +49,7 @@ export class AuthService {
         return true
       } else return false
     } catch (error: any) {
-      return false
+      return error
     }
   }
 

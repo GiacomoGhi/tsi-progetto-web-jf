@@ -11,7 +11,6 @@ import {
   RemoteSupport,
   Scarpe
 } from 'assets'
-import LoginSingupWrapper from 'components/login-singup-wrapper/LoginSingupWrapper'
 
 function HomeView() {
   const imgPaths = [

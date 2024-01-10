@@ -8,24 +8,32 @@ const LoginForm: React.FC<{ onSuccess: () => void }> = ({ onSuccess }) => {
     password: ''
   })
 
+  const [failedLogin, setFailedLogin] = useState(false)
+
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     login()
   }
 
-  //TODO handle error and success
-  //TODO rerun authme on success
-  /**
-   * transfer is auth state to App instance
-   */
+  const handleFail = () => {
+    setFailedLogin(true)
+  }
 
   const login = async () => {
     const { auth } = App
     const res = await auth.login(formData.email, formData.password)
     if (res) {
       onSuccess()
+    } else {
+      handleFail()
     }
   }
+
+  //TODO handle error
+  //TODO rerun authme on success
+  /**
+   * transfer is auth state to App instance
+   */
 
   return (
     <div>
@@ -52,6 +60,7 @@ const LoginForm: React.FC<{ onSuccess: () => void }> = ({ onSuccess }) => {
             required
           />
         </div>
+        {failedLogin && <p style={{ color: 'red' }}>Wrong email or password</p>}
         <button className="button" type="submit">
           Accedi
         </button>

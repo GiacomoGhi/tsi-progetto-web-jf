@@ -25,12 +25,16 @@ const LoginSingupWrapper: React.FC<{ onClose: () => void; onSuccess: () => void;
     setSingup(true)
   }
 
+  const handleBackFromSingup = () => {
+    setSingup(false)
+  }
+
   return (
     <Modal isOpen={active} onClose={handleClose}>
       <div className="modalContainer">
         <h1>Welcome!</h1>
         {singup ? (
-          <SingupForm />
+          <SingupForm onClick={handleBackFromSingup} />
         ) : (
           <>
             <LoginForm onSuccess={handleLogin} />

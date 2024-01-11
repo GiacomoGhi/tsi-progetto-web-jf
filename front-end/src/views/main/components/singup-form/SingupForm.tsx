@@ -2,7 +2,7 @@ import App from 'App'
 import React, { FormEvent, useState } from 'react'
 import { SingUpFormDto } from 'types/SingUpFormDto'
 
-const SingupForm = () => {
+const SingupForm: React.FC<{ onClick: () => void }> = ({ onClick }) => {
   const [formData, setFormData] = useState<SingUpFormDto>({
     email: '',
     password: '',
@@ -13,6 +13,10 @@ const SingupForm = () => {
   })
   const [successfullSingup, setSuccessfullSingup] = useState(false)
   const [displayError, setDisplayError] = useState(false)
+
+  const handleClose = () => {
+    onClick()
+  }
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -30,8 +34,6 @@ const SingupForm = () => {
       setDisplayError(true)
     }
   }
-
-  //TODO set back button functionality
 
   return (
     <div>
@@ -93,7 +95,9 @@ const SingupForm = () => {
             />
           </div>
           <div>
-            <button className="button">{'< < Back'}</button>
+            <button className="button" onClick={handleClose}>
+              {'< < Back'}
+            </button>
             <button className="button ms-4" type="submit">
               Registrati
             </button>

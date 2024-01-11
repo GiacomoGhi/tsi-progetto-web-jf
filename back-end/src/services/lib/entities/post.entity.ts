@@ -3,6 +3,7 @@ import { Column, Entity, ManyToOne } from 'typeorm';
 import { AutoMap } from '@automapper/classes';
 import { UserEntity } from './user.entity';
 import { BaseEntity } from './base.entity';
+import { ArticleEntity } from './article.entity';
 
 @Entity({
   name: 'post',
@@ -18,7 +19,7 @@ export class PostEntity extends BaseEntity {
 
   @AutoMap()
   @Column('varchar')
-  topic!: string;
+  articleId!: string;
 
   @ManyToOne(() => UserEntity, { createForeignKeyConstraints: false })
   @AutoMap(() => UserEntity)

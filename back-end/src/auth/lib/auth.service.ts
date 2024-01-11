@@ -27,7 +27,7 @@ export class AuthService {
           id: userInfo.id,
         },
       });
-      return user;
+      return { ...user, passwordHash: '******' };
     } catch (error) {
       return {
         error: 'user not found',

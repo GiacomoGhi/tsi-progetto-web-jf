@@ -13,7 +13,7 @@ export class PostEntityDto extends BaseEntityDto {
 
   @ApiProperty()
   @AutoMap()
-  topic?: string;
+  articleId?: string;
 
   @AutoMap()
   createdByUserId?: string;

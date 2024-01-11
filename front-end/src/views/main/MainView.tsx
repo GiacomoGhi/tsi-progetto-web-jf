@@ -9,7 +9,7 @@ import NewsView from 'views/news/NewsView'
 import CommunityView from 'views/community/CommunityView'
 import ProfileView from 'views/profile/ProfileView'
 import PrivateRoute from './components/private-route/PrivateRoute'
-import LoginSingupWrapper from 'components/login-singup-wrapper/LoginSingupWrapper'
+import LoginSingupWrapper from 'views/main/components/login-singup-wrapper/LoginSingupWrapper'
 
 function MainView() {
   const { isInitialized, apiClient } = App
@@ -25,13 +25,13 @@ function MainView() {
       await App.initialize()
     }
 
-    // if (isInitialized) {
-    //   const response = await apiClient.loggedUser.check()
+    if (isInitialized) {
+      const response = await apiClient.loggedUser.check()
 
-    //   if (!response.hasErrors && response.data && !response.data.error) {
-    //     setIsAuth(true)
-    //   }
-    // }
+      if (!response.hasErrors && response.data && !response.data.error) {
+        setIsAuth(true)
+      }
+    }
     setLoading(false)
   }, [isInitialized])
 

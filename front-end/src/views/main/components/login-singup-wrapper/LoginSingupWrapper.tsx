@@ -1,8 +1,8 @@
 import Modal from 'components/modal-wrapper/ModalWrapper'
 import './LoginSingupWrapper.styles.scss'
 import React, { useCallback, useEffect, useState } from 'react'
-import LoginForm from 'components/login-from/LoginForm'
-import SingupForm from 'components/singup-form/SingupForm'
+import LoginForm from 'views/main/components/login-from/LoginForm'
+import SingupForm from 'views/main/components/singup-form/SingupForm'
 
 const LoginSingupWrapper: React.FC<{ onClose: () => void; onSuccess: () => void; active: boolean }> = ({
   onSuccess,

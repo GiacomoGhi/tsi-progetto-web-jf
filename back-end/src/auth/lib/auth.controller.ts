@@ -1,7 +1,23 @@
-import { Body, Controller, Get, HttpCode, Post, Query } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpCode,
+  Post,
+  Query,
+  Req,
+  UseGuards,
+} from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { UserSingUp } from 'src/common/lib/user-sing-up';
-import { ApiBody, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiOkResponse,
+  ApiOperation,
+  ApiTags,
+} from '@nestjs/swagger';
+import { JwtAuthGuard } from './jwt-auth.guard';
 
 @Controller('auth')
 @ApiTags('auth')
@@ -30,21 +46,6 @@ export class AuthController {
   }
 
   @Post('login')
-  @ApiOperation({
-    summary: 'get current user',
-    description: 'get current user',
-  })
-  @ApiOkResponse({
-    description: 'Get current user information',
-    schema: {
-      type: 'object',
-      properties: {
-        id: { type: 'string' },
-        fullName: { type: 'string' },
-        role: { type: 'string' },
-      },
-    },
-  })
   @ApiBody({
     schema: {
       type: 'object',
@@ -69,5 +70,18 @@ export class AuthController {
   async confirmEmail(@Query('token') token: string) {
     const res = await this.authService.validateEmail(token);
     return res;
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
+  @Get('me')
+  @HttpCode(200)
+  async getUser(@Req() request: Request) {
+    const authorizationHeader = request.headers['authorization'];
+    const token = authorizationHeader.replace(/^Bearer\s+/i, '');
+
+    const user = await this.authService.getUser(token);
+
+    return user;
   }
 }

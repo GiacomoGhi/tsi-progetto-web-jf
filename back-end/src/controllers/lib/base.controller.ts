@@ -30,7 +30,7 @@ import { AuthenticatedRequest } from './guards/authenticated-request.interface';
 import { RolesGuard } from './guards/roles.guard';
 import { union } from 'lodash';
 
-@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard, RolesGuard)
 @ApiBearerAuth()
 export class BaseController<
   T extends BaseEntity,

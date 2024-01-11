@@ -19,5 +19,6 @@ export default () => ({
     mailFrom: process.env['MAIL_FROM'] ?? '',
     mailTransport: process.env['MAIL_TRANSPORT'] ?? '',
     baseApiUrl: process.env['BASE_API_URL'] ?? '',
+    adminUrl: process.env['ADMIN_URL'] ?? '',
   } as ConfigInterface,
 });

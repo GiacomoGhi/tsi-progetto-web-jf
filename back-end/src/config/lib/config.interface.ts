@@ -16,4 +16,5 @@ export interface ConfigInterface {
   mailFrom: string;
   mailTransport: string;
   baseApiUrl: string;
+  adminUrl: string;
 }

@@ -110,16 +110,19 @@ export class AuthService {
 
   async validateEmail(userId: string) {
     const systemUserId = '10000000-0000-0000-0000-000000000001';
-    const user = await this.userService.findOneByCondition({
-      where: {
-        id: userId,
-      },
-    });
 
-    user.active = true;
-
-    await this.userService.update(systemUserId, user.id, user);
-    return 'email validation completed';
+    try {
+      const user = await this.userService.findOneByCondition({
+        where: {
+          id: userId,
+        },
+      });
+      user.active = true;
+      await this.userService.update(systemUserId, user.id, user);
+      return { status: true };
+    } catch (error) {
+      this.invalidCredentialsExeption(3);
+    }
   }
 
   invalidCredentialsExeption(value: number) {
@@ -130,6 +133,8 @@ export class AuthService {
         throw new HttpException('Email already in use', HttpStatus.CONFLICT);
       case 2:
         throw new HttpException('Ivalid email format', HttpStatus.CONFLICT);
+      case 3:
+        throw new HttpException('Something went wrong', HttpStatus.BAD_REQUEST);
       default:
         throw new HttpException('Error', HttpStatus.INTERNAL_SERVER_ERROR);
     }

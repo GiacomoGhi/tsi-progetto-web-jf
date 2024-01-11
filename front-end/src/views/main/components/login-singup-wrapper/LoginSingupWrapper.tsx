@@ -35,7 +35,7 @@ const LoginSingupWrapper: React.FC<{
       <div className="modalContainer">
         <h1>Welcome!</h1>
         {singup ? (
-          <SingupForm onClick={handleBackFromSingup} />
+          <SingupForm onClick={handleBackFromSingup} onClose={handleClose} />
         ) : (
           <>
             {confermation && <p>Email confermata correttamente, ora puoi accedere! :D</p>}

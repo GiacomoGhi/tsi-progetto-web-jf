@@ -2,7 +2,7 @@ import App from 'App'
 import React, { FormEvent, useState } from 'react'
 import { SingUpFormDto } from 'types/SingUpFormDto'
 
-const SingupForm: React.FC<{ onClick: () => void }> = ({ onClick }) => {
+const SingupForm: React.FC<{ onClick: () => void; onClose: () => void }> = ({ onClick, onClose }) => {
   const [formData, setFormData] = useState<SingUpFormDto>({
     email: '',
     password: '',
@@ -14,8 +14,12 @@ const SingupForm: React.FC<{ onClick: () => void }> = ({ onClick }) => {
   const [successfullSingup, setSuccessfullSingup] = useState(false)
   const [displayError, setDisplayError] = useState(false)
 
-  const handleClose = () => {
+  const handleClick = () => {
     onClick()
+  }
+
+  const handleClose = () => {
+    onClose()
   }
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
@@ -95,7 +99,7 @@ const SingupForm: React.FC<{ onClick: () => void }> = ({ onClick }) => {
             />
           </div>
           <div>
-            <button className="button" onClick={handleClose}>
+            <button className="button" onClick={handleClick}>
               {'< < Back'}
             </button>
             <button className="button ms-4" type="submit">
@@ -107,7 +111,9 @@ const SingupForm: React.FC<{ onClick: () => void }> = ({ onClick }) => {
         <>
           <p>La tua registrazione è avvenuta con successo.</p>
           <p>Una email di conferma è stata inviata.</p>
-          <button className="button">{'< < Back'}</button>
+          <button className="button" onClick={handleClose}>
+            {'Close'}
+          </button>
         </>
       )}
       {displayError && <p className="errorMessage">Registrazione non riuscita, riprova</p>}

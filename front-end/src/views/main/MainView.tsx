@@ -35,7 +35,6 @@ function MainView() {
         const urlSearchParams = new URLSearchParams(window.location.search)
         if (urlSearchParams.has('token')) {
           const token = urlSearchParams.get('token') || ''
-          console.log(token)
 
           confirmEmail(token)
 

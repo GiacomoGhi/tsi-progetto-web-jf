@@ -13,8 +13,8 @@ import { BaseController } from './base.controller';
 
 import { DictionaryEntityDto } from './dto/dictionary.entity.dto';
 
-@Controller('Article')
-@ApiTags('Article')
+@Controller('Dictionary')
+@ApiTags('Dictionary')
 @EntityType(DictionaryEntity, DictionaryEntityDto)
 export class DictionaryController extends BaseController<
   DictionaryEntity,

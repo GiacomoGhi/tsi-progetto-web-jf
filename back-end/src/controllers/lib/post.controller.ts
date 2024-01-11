@@ -7,10 +7,10 @@ import { EntityType } from '@common';
 import { BaseController } from './base.controller';
 import { PostEntityDto } from './dto/post.entity.dto';
 
-@Controller('Article')
-@ApiTags('Article')
+@Controller('Post')
+@ApiTags('Post')
 @EntityType(PostEntity, PostEntityDto)
-export class ArticleController extends BaseController<
+export class PostController extends BaseController<
   PostEntity,
   PostService,
   PostEntityDto

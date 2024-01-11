@@ -13,8 +13,8 @@ import { BaseController } from './base.controller';
 
 import { HitEntityDto } from './dto/hit.entity.dto';
 
-@Controller('Article')
-@ApiTags('Article')
+@Controller('Hit')
+@ApiTags('Hit')
 @EntityType(HitEntity, HitEntityDto)
 export class HitController extends BaseController<
   HitEntity,

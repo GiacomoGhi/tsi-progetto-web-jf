@@ -57,4 +57,21 @@ export class AuthService {
     const { cookie } = App
     cookie.removeJwtToken()
   }
+
+  public async confirmEmail(userId: string) {
+    try {
+      const response = await fetch(`${this.baseUrl}/auth/confirm-email?token=${userId}`, {
+        method: 'GET',
+        headers: {
+          'Content-type': 'application/json; charset=UTF-8'
+        }
+      })
+
+      const data = await response.json()
+
+      return { hasErrors: !response.ok, data, error: response.ok ? undefined : JSON.stringify(data) }
+    } catch (error: any) {
+      return { hasErrors: true, error, data: null }
+    }
+  }
 }

@@ -12,7 +12,7 @@ import PrivateRoute from './components/private-route/PrivateRoute'
 import LoginSingupWrapper from 'views/main/components/login-singup-wrapper/LoginSingupWrapper'
 
 function MainView() {
-  const { isInitialized, apiClient } = App
+  const { isInitialized, apiClient, auth } = App
 
   const [loading, setLoading] = useState(true)
   const [isAuth, setIsAuth] = useState(false)
@@ -30,10 +30,28 @@ function MainView() {
 
       if (!response.hasErrors && response.data && !response.data.error) {
         setIsAuth(true)
+      } else {
+        const urlSearchParams = new URLSearchParams(window.location.search)
+        if (urlSearchParams.has('token')) {
+          const token = urlSearchParams.get('token') || ''
+          console.log(token)
+
+          confirmEmail(token)
+
+          const newUrl = window.location.href.split('?')[0]
+          window.history.replaceState({}, document.title, newUrl)
+        }
       }
     }
     setLoading(false)
   }, [isInitialized])
+
+  const confirmEmail = async (token: string) => {
+    const response = await auth.confirmEmail(token)
+    if (!response.hasErrors && response.data) {
+      console.log(response)
+    }
+  }
 
   const handleSuccess = async () => {
     const response = await apiClient.loggedUser.check()

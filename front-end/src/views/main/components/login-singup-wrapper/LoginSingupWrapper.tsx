@@ -4,11 +4,12 @@ import React, { useCallback, useEffect, useState } from 'react'
 import LoginForm from 'views/main/components/login-from/LoginForm'
 import SingupForm from 'views/main/components/singup-form/SingupForm'
 
-const LoginSingupWrapper: React.FC<{ onClose: () => void; onSuccess: () => void; active: boolean }> = ({
-  onSuccess,
-  active,
-  onClose
-}) => {
+const LoginSingupWrapper: React.FC<{
+  onClose: () => void
+  onSuccess: () => void
+  active: boolean
+  confermation?: boolean
+}> = ({ onSuccess, active, onClose, confermation }) => {
   const [singup, setSingup] = useState(false)
 
   const handleClose = () => {
@@ -37,6 +38,7 @@ const LoginSingupWrapper: React.FC<{ onClose: () => void; onSuccess: () => void;
           <SingupForm onClick={handleBackFromSingup} />
         ) : (
           <>
+            {confermation && <p>Email confermata correttamente, ora puoi accedere! :D</p>}
             <LoginForm onSuccess={handleLogin} />
             <div>
               <button className="button" onClick={handleSingupClick}>

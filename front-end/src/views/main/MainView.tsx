@@ -17,6 +17,7 @@ function MainView() {
   const [loading, setLoading] = useState(true)
   const [isAuth, setIsAuth] = useState(false)
   const [renderLogin, setRenderLogin] = useState(false)
+  const [confermation, setConfermation] = useState(false)
 
   const initializeApp = useCallback(async () => {
     if (!isInitialized) {
@@ -49,7 +50,8 @@ function MainView() {
   const confirmEmail = async (token: string) => {
     const response = await auth.confirmEmail(token)
     if (!response.hasErrors && response.data) {
-      console.log(response)
+      setRenderLogin(true)
+      setConfermation(true)
     }
   }
 
@@ -68,6 +70,7 @@ function MainView() {
 
   const handleClose = () => {
     setRenderLogin(false)
+    setConfermation(false)
   }
 
   // TODO add a real loader component
@@ -98,7 +101,12 @@ function MainView() {
                   <Route path="/profile" element={<ProfileView />} />
                 </Route>
               </Routes>
-              <LoginSingupWrapper active={renderLogin} onSuccess={handleSuccess} onClose={handleClose} />
+              <LoginSingupWrapper
+                confermation={confermation}
+                active={renderLogin}
+                onSuccess={handleSuccess}
+                onClose={handleClose}
+              />
             </div>
           </main>
           <AppFooter />

@@ -1,23 +1,25 @@
-import React, { useRef } from 'react'
+import React, { useState, useRef } from 'react'
 import './AppNavigationMenu.style.scss'
 import { LogoBlu } from 'assets'
 import { Link } from 'react-router-dom'
 
 function AppNavigationMenu() {
-  const handleLinkClick = () => {
-    const closeButton = document.getElementById('closeButton')
-    if (closeButton) {
-      const observer = new IntersectionObserver(entries => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            closeButton.click()
-          }
-        })
-      })
+  const [isOffcanvasOpen, setIsOffcanvasOpen] = useState(false)
+  const closeButtonRef = useRef<HTMLButtonElement>(null)
 
-      observer.observe(closeButton)
+  const handleLinkClick = () => {
+    // Close the offcanvas when a link is clicked
+    if (closeButtonRef.current && isOffcanvasOpen) {
+      closeButtonRef.current.click()
     }
+    setIsOffcanvasOpen(false)
   }
+
+  const handleToggleClick = () => {
+    // Toggle the offcanvas state when the toggle button is clicked
+    setIsOffcanvasOpen(!isOffcanvasOpen)
+  }
+
   return (
     <div className="container-fluid rounded-bottom-4 z-3 ps-5 navBar">
       <div className="row my-0 py-0 ">
@@ -37,13 +39,15 @@ function AppNavigationMenu() {
                 />
               </a>
               <button
+                ref={closeButtonRef}
                 id="closeButton"
                 className="navbar-toggler navLink"
                 type="button"
                 data-bs-toggle="offcanvas"
                 data-bs-target="#offcanvasDarkNavbar"
                 aria-controls="offcanvasDarkNavbar"
-                aria-label="Toggle navigation">
+                aria-label="Toggle navigation"
+                onClick={handleToggleClick}>
                 <span className="navbar-toggler-icon img-fluid"></span>
               </button>
               <div

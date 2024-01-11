@@ -13,7 +13,7 @@ function ProfileView() {
   })
   return (
     <>
-      <div className="d-flex justify-content-between mx-0 mx-sm-5 mt-3">
+      <div className="d-flex justify-content-between mx-3 mx-sm-5 mt-3">
         <h1>I Miei Dati</h1>
         <button className="button">{'<< Logout >>'}</button>
       </div>

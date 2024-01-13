@@ -56,9 +56,6 @@ const LoginForm: React.FC<{ onSuccess: () => void }> = ({ onSuccess }) => {
           Accedi
         </button>
       </form>
-      <div>
-        <button className="button">Password Dimenticata</button>
-      </div>
     </div>
   )
 }

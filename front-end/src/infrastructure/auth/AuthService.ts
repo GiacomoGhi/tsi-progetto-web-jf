@@ -53,6 +53,25 @@ export class AuthService {
     }
   }
 
+  public async reset(body: { email: string }) {
+    //http://localhost:3333/api/v1/auth/me
+    ///api/v1/auth/reset-password
+    try {
+      const response = await fetch(`${this.baseUrl}/auth/reset-password`, {
+        method: 'POST',
+        headers: {
+          'Content-type': 'application/json; charset=UTF-8'
+        },
+        body: JSON.stringify(body)
+      })
+      const data = await response.json()
+
+      return { hasErrors: !response.ok, data, error: response.ok ? undefined : JSON.stringify(data) }
+    } catch (error) {
+      return { hasErrors: true, error, data: null }
+    }
+  }
+
   public logout() {
     const { cookie } = App
     cookie.removeJwtToken()

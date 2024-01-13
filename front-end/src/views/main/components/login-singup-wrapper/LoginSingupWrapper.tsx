@@ -3,6 +3,7 @@ import './LoginSingupWrapper.styles.scss'
 import React, { useCallback, useEffect, useState } from 'react'
 import LoginForm from 'views/main/components/login-from/LoginForm'
 import SingupForm from 'views/main/components/singup-form/SingupForm'
+import ResetForm from '../reset-password-form/ResetPassword'
 
 const LoginSingupWrapper: React.FC<{
   onClose: () => void
@@ -11,6 +12,8 @@ const LoginSingupWrapper: React.FC<{
   confermation?: boolean
 }> = ({ onSuccess, active, onClose, confermation }) => {
   const [singup, setSingup] = useState(false)
+
+  const [reset, setReset] = useState(false)
 
   const handleClose = () => {
     setSingup(false)
@@ -30,6 +33,10 @@ const LoginSingupWrapper: React.FC<{
     setSingup(false)
   }
 
+  const handleBackFromReset = () => {
+    setReset(false)
+  }
+
   return (
     <Modal isOpen={active} onClose={handleClose}>
       <div className="modalContainer">
@@ -38,13 +45,28 @@ const LoginSingupWrapper: React.FC<{
           <SingupForm onClick={handleBackFromSingup} onClose={handleClose} />
         ) : (
           <>
-            {confermation && <p>Email confermata correttamente, ora puoi accedere! :D</p>}
-            <LoginForm onSuccess={handleLogin} />
-            <div>
-              <button className="button" onClick={handleSingupClick}>
-                Registrati
-              </button>
-            </div>
+            {!reset ? (
+              <>
+                {confermation && <p>Email confermata correttamente, ora puoi accedere! :D</p>}
+                <LoginForm onSuccess={handleLogin} />
+                <div>
+                  <button className="button" onClick={handleSingupClick}>
+                    Registrati
+                  </button>
+                </div>
+                <div>
+                  <button
+                    className="button"
+                    onClick={() => {
+                      setReset(true)
+                    }}>
+                    Password Dimenticata
+                  </button>
+                </div>
+              </>
+            ) : (
+              <ResetForm onClose={handleBackFromReset} />
+            )}
           </>
         )}
       </div>

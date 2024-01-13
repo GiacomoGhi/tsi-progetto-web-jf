@@ -19,11 +19,7 @@ export class ArticleEntity extends BaseEntity {
 
   @AutoMap()
   @Column('text', { nullable: true })
-  image: Blob;
-
-  @AutoMap()
-  @Column('text', { nullable: true })
-  liked: number;
+  image: string;
 
   @AutoMap()
   @Column('text', { nullable: true })

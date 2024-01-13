@@ -13,15 +13,11 @@ export class ArticleEntityDto extends BaseEntityDto {
 
   @ApiProperty()
   @AutoMap()
-  image?: Blob;
+  image?: string;
 
   @ApiProperty()
   @AutoMap()
   isNews?: boolean;
-
-  @ApiProperty()
-  @AutoMap()
-  liked?: number;
 
   @AutoMap()
   createdByUserId?: string;

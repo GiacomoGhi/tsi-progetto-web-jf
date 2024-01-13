@@ -102,7 +102,7 @@ export class AuthService {
         } as UserEntity;
 
         await this.userService.insert(systemUserId, userToAdd);
-        await this.mailService.sendUserConfirmation(userToAdd, userToAdd.id); // TODO set the correct token
+        await this.mailService.sendUserConfirmation(userToAdd, userToAdd.id);
         return 'successfull registration';
       } else return this.invalidCredentialsExeption(1);
     }
@@ -125,6 +125,27 @@ export class AuthService {
     }
   }
 
+  async reset(body: { email: string }) {
+    const systemUserId = '10000000-0000-0000-0000-000000000001';
+
+    try {
+      const user = await this.userService.findOneByCondition({
+        where: {
+          email: body.email,
+        },
+      });
+      //user.active = true;
+      const tmpPassword = this.generateRandomString();
+      const hashedPassword = await this.hashPassword(tmpPassword);
+      user.passwordHash = hashedPassword;
+      await this.userService.update(systemUserId, user.id, user);
+      await this.mailService.sendResetPassword(user, tmpPassword);
+      return { status: true };
+    } catch (error) {
+      this.invalidCredentialsExeption(4);
+    }
+  }
+
   invalidCredentialsExeption(value: number) {
     switch (value) {
       case 0:
@@ -135,6 +156,8 @@ export class AuthService {
         throw new HttpException('Ivalid email format', HttpStatus.CONFLICT);
       case 3:
         throw new HttpException('Something went wrong', HttpStatus.BAD_REQUEST);
+      case 4:
+        throw new HttpException('Account not found', HttpStatus.CONFLICT);
       default:
         throw new HttpException('Error', HttpStatus.INTERNAL_SERVER_ERROR);
     }
@@ -147,6 +170,17 @@ export class AuthService {
 
   async generateJwt(user: AuthenticatedUser) {
     return await this.jwtService.signAsync({ user });
+  }
+
+  generateRandomString(): string {
+    const characters =
+      'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let randomString = '';
+    for (let i = 0; i < 8; i++) {
+      const randomIndex = Math.floor(Math.random() * characters.length);
+      randomString += characters.charAt(randomIndex);
+    }
+    return randomString;
   }
 
   async hashPassword(password: string) {

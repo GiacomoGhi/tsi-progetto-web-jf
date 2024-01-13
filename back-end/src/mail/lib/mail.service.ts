@@ -26,4 +26,17 @@ export class MailService {
       },
     });
   }
+
+  async sendResetPassword(user: UserEntity, password: string) {
+    await this.mailerService.sendMail({
+      to: user.email,
+      from: '"Support Team" <fj@tsiprogetto.com>',
+      subject: 'Alert from Fabio and Jack App! Your NEW Password',
+      template: './resetPassword',
+      context: {
+        name: user.name,
+        password: password,
+      },
+    });
+  }
 }

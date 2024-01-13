@@ -4,7 +4,11 @@ import { ApiProperty } from '@nestjs/swagger';
 export class UserEntityDto extends BaseEntityDto {
   @ApiProperty()
   @AutoMap()
-  email: string;
+  email?: string;
+
+  @ApiProperty()
+  @AutoMap()
+  nickName!: string;
 
   @ApiProperty()
   @AutoMap()
@@ -16,7 +20,7 @@ export class UserEntityDto extends BaseEntityDto {
 
   @ApiProperty()
   @AutoMap()
-  profession?: string;
+  role?: number;
 
   @AutoMap()
   createdByUserId?: string;

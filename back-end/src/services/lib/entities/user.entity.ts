@@ -29,10 +29,6 @@ export class UserEntity extends BaseEntity {
   surname!: string;
 
   @AutoMap()
-  @Column('varchar', { nullable: true })
-  profession: string | null;
-
-  @AutoMap()
   @Column('numeric')
   role!: number;
 

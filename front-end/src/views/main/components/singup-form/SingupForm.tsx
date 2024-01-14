@@ -8,8 +8,7 @@ const SingupForm: React.FC<{ onClick: () => void; onClose: () => void }> = ({ on
     password: '',
     firstName: '',
     lastName: '',
-    nickName: '',
-    profession: ''
+    nickName: ''
   })
   const [successfullSingup, setSuccessfullSingup] = useState(false)
   const [displayError, setDisplayError] = useState(false)

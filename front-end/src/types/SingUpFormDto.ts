@@ -4,5 +4,4 @@ export type SingUpFormDto = {
   firstName: string
   nickName: string
   lastName: string
-  profession: string
 }

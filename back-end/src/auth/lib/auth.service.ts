@@ -20,11 +20,13 @@ export class AuthService {
   ) {}
 
   async getUser(token: string) {
-    const userInfo = this.jwtService.decode(token) as AuthenticatedUser;
+    const userInfo = this.jwtService.decode(token) as {
+      user: AuthenticatedUser;
+    };
     try {
       const user = await this.userService.findOneByCondition({
         where: {
-          id: userInfo.id,
+          id: userInfo.user.id,
         },
       });
       return { ...user, passwordHash: '******' };

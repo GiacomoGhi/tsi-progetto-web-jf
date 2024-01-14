@@ -38,6 +38,7 @@ function MainView() {
 
     if (!response.hasErrors && response.data && !response.data.error) {
       setIsAuth(true)
+      setRenderLogin(false)
     } else {
       setIsAuth(false)
     }

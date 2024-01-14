@@ -20,6 +20,10 @@ export class UserEntityDto extends BaseEntityDto {
 
   @ApiProperty()
   @AutoMap()
+  passwordHash?: string;
+
+  @ApiProperty()
+  @AutoMap()
   role?: number;
 
   @AutoMap()

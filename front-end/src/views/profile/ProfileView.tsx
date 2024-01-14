@@ -5,12 +5,20 @@ import { UserDto } from 'infrastructure/api-client/dto/user.dto'
 
 const ProfileView: React.FC<{ onLogout: () => void }> = ({ onLogout }) => {
   const [fromIsChanged, setFormIsChanged] = useState(false)
+  const [userId, setUserId] = useState('')
   const [formData, setFormData] = useState<Partial<UserDto>>({
     email: '',
     name: '',
     surname: '',
     nickName: '',
-    password: ''
+    passwordHash: ''
+  })
+  const [initialData, setInitialData] = useState<Partial<UserDto>>({
+    email: '',
+    name: '',
+    surname: '',
+    nickName: '',
+    passwordHash: ''
   })
 
   const fetchData = async (from: number, to: number) => {
@@ -19,19 +27,43 @@ const ProfileView: React.FC<{ onLogout: () => void }> = ({ onLogout }) => {
     const response = await apiClient.loggedUser.check()
 
     if (!response.hasErrors && response.data) {
-      const initialFormData = response.data as Partial<UserDto>
-
-      setFormData({
-        email: initialFormData.email,
-        name: initialFormData.name,
-        surname: initialFormData.surname,
-        nickName: initialFormData.nickName
-      })
+      initFormData(response.data as Partial<UserDto>)
     }
+  }
+
+  const initFormData = (initialFormData: Partial<UserDto>) => {
+    const tempData = {
+      email: initialFormData.email,
+      name: initialFormData.name,
+      surname: initialFormData.surname,
+      nickName: initialFormData.nickName
+    }
+    setUserId(initialFormData.id || '')
+    setInitialData(tempData)
+    setFormData(tempData)
+    setFormIsChanged(false)
   }
 
   const handleLogout = () => {
     onLogout()
+  }
+
+  const handleFormReset = () => {
+    setFormData(initialData)
+    setFormIsChanged(false)
+  }
+
+  const handleSave = () => {
+    saveData()
+  }
+
+  const saveData = async () => {
+    const { apiClient } = App
+    const response = await apiClient.users.update(userId, formData)
+
+    if (!response.hasErrors && response.data) {
+      initFormData(response.data as Partial<UserDto>)
+    }
   }
 
   useEffect(() => {
@@ -51,8 +83,8 @@ const ProfileView: React.FC<{ onLogout: () => void }> = ({ onLogout }) => {
           <div className="row mb-sm-3">
             <div className="col-sm-6 mb-3">
               <input
-                readOnly
-                defaultValue={formData.email}
+                disabled
+                defaultValue={initialData.email}
                 className="form-control"
                 placeholder="Indirizzo email"
                 type="email"
@@ -60,12 +92,13 @@ const ProfileView: React.FC<{ onLogout: () => void }> = ({ onLogout }) => {
             </div>
             <div className="col-sm-6 mb-3">
               <input
-                defaultValue={formData.nickName}
                 className="form-control"
                 placeholder="Nickname"
                 type="text"
+                value={formData.nickName}
                 onChange={e => {
                   setFormData({ ...formData, nickName: e.target.value })
+                  setFormIsChanged(true)
                 }}
                 required
               />
@@ -74,24 +107,26 @@ const ProfileView: React.FC<{ onLogout: () => void }> = ({ onLogout }) => {
           <div className="row mb-sm-3">
             <div className="col-sm-6 mb-3">
               <input
-                defaultValue={formData.name}
                 className="form-control"
                 placeholder="Nome"
                 type="text"
+                value={formData.name || ''}
                 onChange={e => {
                   setFormData({ ...formData, name: e.target.value })
+                  setFormIsChanged(true)
                 }}
                 required
               />
             </div>
             <div className="col-sm-6 mb-3">
               <input
-                defaultValue={formData.surname}
                 className="form-control"
                 placeholder="Cognome"
                 type="text"
+                value={formData.surname || ''}
                 onChange={e => {
                   setFormData({ ...formData, surname: e.target.value })
+                  setFormIsChanged(true)
                 }}
                 required
               />
@@ -103,8 +138,10 @@ const ProfileView: React.FC<{ onLogout: () => void }> = ({ onLogout }) => {
                 className="form-control"
                 placeholder="Password"
                 type="password"
+                value={formData.passwordHash || ''}
                 onChange={e => {
-                  setFormData({ ...formData, password: e.target.value })
+                  setFormData({ ...formData, passwordHash: e.target.value })
+                  setFormIsChanged(true)
                 }}
                 required
               />
@@ -117,15 +154,15 @@ const ProfileView: React.FC<{ onLogout: () => void }> = ({ onLogout }) => {
               </div>
             </div>
           </div>
-          <div className="d-flex justify-content-between mx-0 mx-sm-5">
-            <button className="button ms-4" type="submit">
-              {'< < Annulla Modifiche'}
-            </button>
-            <button className="button ms-4" type="submit">
-              {'Salva Modifiche > >'}
-            </button>
-          </div>
         </form>
+        <div className="d-flex justify-content-between mx-0 mx-sm-5">
+          <button className="formButton ms-4" disabled={!fromIsChanged} onClick={handleFormReset}>
+            {'< < Annulla Modifiche'}
+          </button>
+          <button className="formButton ms-4" disabled={!fromIsChanged} onClick={handleSave}>
+            {'Salva Modifiche > >'}
+          </button>
+        </div>
       </div>
       <div className="d-flex justify-content-center mb-5 pb-5 mt-3">
         <button className="button">{'Eliminia il Mio Account :C'}</button>

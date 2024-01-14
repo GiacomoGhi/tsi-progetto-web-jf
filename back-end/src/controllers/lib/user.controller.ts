@@ -1,6 +1,6 @@
 import { Mapper } from '@automapper/core';
 import { InjectMapper } from '@automapper/nestjs';
-import { Controller, Logger } from '@nestjs/common';
+import { BadRequestException, Controller, Logger } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { UserEntity, UserService } from '../../services/index';
 import { EntityType } from '@common';
@@ -47,6 +47,31 @@ export class UserController extends BaseController<
     const dto: UserEntityDto = this.mapToDto(updatedItem);
 
     return dto;
+  }
+
+  protected override async deleteImplementation(
+    req: AuthenticatedRequest,
+    id: string,
+  ) {
+    if (!id) {
+      throw new BadRequestException(
+        "Devi specificare un id come parametro dell'url",
+      );
+    }
+
+    const userToDelete = await this.service.findOne(id);
+
+    const deletedUser = {
+      ...userToDelete,
+      email: '********',
+      passwordHash: '********',
+      name: '********',
+      surname: '********',
+      active: false,
+      role: 0,
+    } as UserEntity;
+
+    await this.service.update(req.user.id, id, deletedUser);
   }
 
   protected async hashPassword(password: string) {

@@ -2,10 +2,12 @@ import React, { useEffect, useState } from 'react'
 import './ProfileView.styles.scss'
 import App from 'App'
 import { UserDto } from 'infrastructure/api-client/dto/user.dto'
+import Modal from 'components/modal-wrapper/ModalWrapper'
 
 const ProfileView: React.FC<{ onLogout: () => void }> = ({ onLogout }) => {
   const [fromIsChanged, setFormIsChanged] = useState(false)
   const [userId, setUserId] = useState('')
+  const [showdeleteConfermation, setShowdeleteConfermation] = useState(false)
   const [formData, setFormData] = useState<Partial<UserDto>>({
     email: '',
     name: '',
@@ -21,16 +23,6 @@ const ProfileView: React.FC<{ onLogout: () => void }> = ({ onLogout }) => {
     passwordHash: ''
   })
 
-  const fetchData = async (from: number, to: number) => {
-    const { apiClient } = App
-
-    const response = await apiClient.loggedUser.check()
-
-    if (!response.hasErrors && response.data) {
-      initFormData(response.data as Partial<UserDto>)
-    }
-  }
-
   const initFormData = (initialFormData: Partial<UserDto>) => {
     const tempData = {
       email: initialFormData.email,
@@ -42,6 +34,36 @@ const ProfileView: React.FC<{ onLogout: () => void }> = ({ onLogout }) => {
     setInitialData(tempData)
     setFormData(tempData)
     setFormIsChanged(false)
+  }
+
+  const fetchData = async (from: number, to: number) => {
+    const { apiClient } = App
+
+    const response = await apiClient.loggedUser.check()
+
+    if (!response.hasErrors && response.data) {
+      initFormData(response.data as Partial<UserDto>)
+    }
+  }
+
+  const saveData = async () => {
+    const { apiClient } = App
+    const response = await apiClient.users.update(userId, formData)
+
+    if (!response.hasErrors && response.data) {
+      initFormData(response.data as Partial<UserDto>)
+    }
+  }
+
+  const deleteData = async () => {
+    const { apiClient } = App
+
+    const response = await apiClient.users.delete(userId)
+
+    if (!response.hasErrors) {
+      setShowdeleteConfermation(false)
+      onLogout()
+    }
   }
 
   const handleLogout = () => {
@@ -57,13 +79,12 @@ const ProfileView: React.FC<{ onLogout: () => void }> = ({ onLogout }) => {
     saveData()
   }
 
-  const saveData = async () => {
-    const { apiClient } = App
-    const response = await apiClient.users.update(userId, formData)
+  const handleDelete = () => {
+    deleteData()
+  }
 
-    if (!response.hasErrors && response.data) {
-      initFormData(response.data as Partial<UserDto>)
-    }
+  const handleModalClose = () => {
+    setShowdeleteConfermation(false)
   }
 
   useEffect(() => {
@@ -72,6 +93,24 @@ const ProfileView: React.FC<{ onLogout: () => void }> = ({ onLogout }) => {
 
   return (
     <>
+      <Modal isOpen={showdeleteConfermation} onClose={handleModalClose}>
+        <div className="mt-4 p-4">
+          <h1 className="text-danger">Stai eliminando il tuo account</h1>
+          <h2 className="mb-5">Vuoi veramente procedere?</h2>
+          <div className="row mb-sm-3 text-center">
+            <div className="col-6">
+              <button className="button" onClick={handleModalClose}>
+                No
+              </button>
+            </div>
+            <div className="col-6">
+              <button className="button" onClick={handleDelete}>
+                Yes
+              </button>
+            </div>
+          </div>
+        </div>
+      </Modal>
       <div className="d-flex justify-content-between mx-3 mx-sm-5 mt-3">
         <h1>I Miei Dati</h1>
         <button className="button" onClick={handleLogout}>
@@ -165,7 +204,13 @@ const ProfileView: React.FC<{ onLogout: () => void }> = ({ onLogout }) => {
         </div>
       </div>
       <div className="d-flex justify-content-center mb-5 pb-5 mt-3">
-        <button className="button">{'Eliminia il Mio Account :C'}</button>
+        <button
+          className="button"
+          onClick={() => {
+            setShowdeleteConfermation(true)
+          }}>
+          {'Eliminia il Mio Account :C'}
+        </button>
       </div>
     </>
   )

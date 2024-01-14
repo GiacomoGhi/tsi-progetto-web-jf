@@ -2,7 +2,7 @@ import React, { Suspense, useCallback, useEffect, useState } from 'react'
 import AppNavigationMenu from './components/app-nav-menu/AppNavigationMenu'
 import AppFooter from './components/footer/AppFooter'
 import './MainView.styles.scss'
-import { Route, Routes } from 'react-router-dom'
+import { Route, Routes, useNavigate } from 'react-router-dom'
 import HomeView from 'views/home/HomeView'
 import App from 'App'
 import NewsView from 'views/news/NewsView'
@@ -12,7 +12,8 @@ import PrivateRoute from './components/private-route/PrivateRoute'
 import LoginSingupWrapper from 'views/main/components/login-singup-wrapper/LoginSingupWrapper'
 
 function MainView() {
-  const { isInitialized, apiClient, auth } = App
+  const { isInitialized, apiClient } = App
+  const navigate = useNavigate()
 
   const [loading, setLoading] = useState(true)
   const [isAuth, setIsAuth] = useState(false)
@@ -27,30 +28,18 @@ function MainView() {
     }
 
     if (isInitialized) {
-      const response = await apiClient.loggedUser.check()
-
-      if (!response.hasErrors && response.data && !response.data.error) {
-        setIsAuth(true)
-      } else {
-        const urlSearchParams = new URLSearchParams(window.location.search)
-        if (urlSearchParams.has('token')) {
-          const token = urlSearchParams.get('token') || ''
-
-          confirmEmail(token)
-
-          const newUrl = window.location.href.split('?')[0]
-          window.history.replaceState({}, document.title, newUrl)
-        }
-      }
+      await checkAuth()
     }
     setLoading(false)
   }, [isInitialized])
 
-  const confirmEmail = async (token: string) => {
-    const response = await auth.confirmEmail(token)
-    if (!response.hasErrors && response.data) {
-      setRenderLogin(true)
-      setConfermation(true)
+  const checkAuth = async () => {
+    const response = await apiClient.loggedUser.check()
+
+    if (!response.hasErrors && response.data && !response.data.error) {
+      setIsAuth(true)
+    } else {
+      setIsAuth(false)
     }
   }
 
@@ -70,6 +59,13 @@ function MainView() {
   const handleClose = () => {
     setRenderLogin(false)
     setConfermation(false)
+  }
+
+  const handleLogout = () => {
+    const { auth } = App
+    setIsAuth(false)
+    auth.logout()
+    navigate('/')
   }
 
   // TODO add a real loader component
@@ -97,7 +93,7 @@ function MainView() {
                 <Route path="/news" element={<NewsView />} />
                 <Route element={<PrivateRoute isAuth={isAuth} onFail={handleFail} />}>
                   <Route path="/community" element={<CommunityView />} />
-                  <Route path="/profile" element={<ProfileView />} />
+                  <Route path="/profile" element={<ProfileView onLogout={handleLogout} />} />
                 </Route>
               </Routes>
               <LoginSingupWrapper

@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from 'react'
-import { SingUpFormDto } from 'types/SingUpFormDto'
 import './ProfileView.styles.scss'
 import App from 'App'
 import { UserDto } from 'infrastructure/api-client/dto/user.dto'
 
-function ProfileView() {
+const ProfileView: React.FC<{ onLogout: () => void }> = ({ onLogout }) => {
   const [fromIsChanged, setFormIsChanged] = useState(false)
   const [formData, setFormData] = useState<Partial<UserDto>>({
     email: '',
@@ -31,6 +30,10 @@ function ProfileView() {
     }
   }
 
+  const handleLogout = () => {
+    onLogout()
+  }
+
   useEffect(() => {
     fetchData(0, 20)
   }, [])
@@ -39,7 +42,9 @@ function ProfileView() {
     <>
       <div className="d-flex justify-content-between mx-3 mx-sm-5 mt-3">
         <h1>I Miei Dati</h1>
-        <button className="button">{'<< Logout >>'}</button>
+        <button className="button" onClick={handleLogout}>
+          {'<< Logout >>'}
+        </button>
       </div>
       <div className="borderContainer">
         <form className="mt-3">

@@ -6,6 +6,7 @@ export interface UserDto extends BaseDto {
   surname: string
   nickName: string
   password: string
+  role: string
   createdByUserId?: string
   lastModifiedByUserId?: string
   createdByUserEmail?: string

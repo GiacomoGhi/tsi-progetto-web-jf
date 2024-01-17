@@ -3,10 +3,18 @@ import pack from '../package.json'
 import { AuthApiClient } from './infrastructure/api-client/auth.api-client'
 import { UserApiClient } from 'infrastructure/api-client/user.api-client'
 import { AuthService } from 'infrastructure/auth/AuthService'
+import { ArticleApiClient } from 'infrastructure/api-client/article.api-client'
+import { DictionaryApiClient } from 'infrastructure/api-client/dictionary.api-client'
+import { HitApiClient } from 'infrastructure/api-client/hit.api-client'
+import { PostApiClient } from 'infrastructure/api-client/post.api-client'
 
 export interface ApiClientService {
   users: UserApiClient
   loggedUser: AuthApiClient
+  articles: ArticleApiClient
+  terms: DictionaryApiClient
+  hits: HitApiClient
+  posts: PostApiClient
 }
 
 class App {
@@ -53,7 +61,11 @@ class App {
   private async configureApiClientService(): Promise<boolean> {
     this.apiClient = {
       users: new UserApiClient('user'),
-      loggedUser: new AuthApiClient('auth/me')
+      loggedUser: new AuthApiClient('auth/me'),
+      articles: new ArticleApiClient('article'),
+      terms: new DictionaryApiClient('term'),
+      hits: new HitApiClient('hit'),
+      posts: new PostApiClient('post')
     }
     return true
   }

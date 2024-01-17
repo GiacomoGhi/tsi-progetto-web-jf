@@ -1,0 +1,5 @@
+{
+file_01.jpg,IKEA;
+file_02.jpg,Manutenzione;
+file_03.jpg,Scarpe;
+}

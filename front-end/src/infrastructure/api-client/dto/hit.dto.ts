@@ -1,11 +1,8 @@
 import { BaseDto } from './base.dto'
 
-export interface UserDto extends BaseDto {
-  email?: string
-  nickName?: string
-  firstName?: string
-  surname?: string
-  role?: number
+export interface HitDto extends BaseDto {
+  topic?: string
+  author?: string
   createdByUserId?: string
   lastModifiedByUserId?: string
   createdByUserEmail?: string

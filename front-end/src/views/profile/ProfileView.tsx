@@ -3,10 +3,12 @@ import './ProfileView.styles.scss'
 import App from 'App'
 import { UserDto } from 'infrastructure/api-client/dto/user.dto'
 import Modal from 'components/modal-wrapper/ModalWrapper'
+import AdminUsersAction from 'components/admin-users-action/AdminsUsersAction'
 
 const ProfileView: React.FC<{ onLogout: () => void }> = ({ onLogout }) => {
   const [fromIsChanged, setFormIsChanged] = useState(false)
   const [userId, setUserId] = useState('')
+  const [adminUser, setAdminUser] = useState(false)
   const [showdeleteConfermation, setShowdeleteConfermation] = useState(false)
   const [formData, setFormData] = useState<Partial<UserDto>>({
     email: '',
@@ -30,6 +32,7 @@ const ProfileView: React.FC<{ onLogout: () => void }> = ({ onLogout }) => {
       surname: initialFormData.surname,
       nickName: initialFormData.nickName
     }
+    setAdminUser(initialFormData.role === '1')
     setUserId(initialFormData.id || '')
     setInitialData(tempData)
     setFormData(tempData)
@@ -212,6 +215,7 @@ const ProfileView: React.FC<{ onLogout: () => void }> = ({ onLogout }) => {
           {'Eliminia il Mio Account :C'}
         </button>
       </div>
+      {adminUser && <AdminUsersAction />}
     </>
   )
 }

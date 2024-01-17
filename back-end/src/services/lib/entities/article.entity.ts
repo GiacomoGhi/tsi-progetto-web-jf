@@ -18,8 +18,8 @@ export class ArticleEntity extends BaseEntity {
   description!: string;
 
   @AutoMap()
-  @Column('text', { nullable: true })
-  image: string;
+  @Column({ type: 'bytea', nullable: true })
+  image: Buffer;
 
   @AutoMap()
   @Column('text', { nullable: true })

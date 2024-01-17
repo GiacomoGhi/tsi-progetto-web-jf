@@ -5,7 +5,7 @@ export interface ArticleDto extends BaseDto {
   description?: string
   firstName?: string
   surname?: string
-  image?: string
+  image?: Buffer
   isNews?: boolean
   createdByUserId?: string
   lastModifiedByUserId?: string

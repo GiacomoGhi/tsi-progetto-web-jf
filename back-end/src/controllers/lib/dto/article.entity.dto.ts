@@ -13,7 +13,7 @@ export class ArticleEntityDto extends BaseEntityDto {
 
   @ApiProperty()
   @AutoMap()
-  image?: string;
+  image?: Buffer;
 
   @ApiProperty()
   @AutoMap()

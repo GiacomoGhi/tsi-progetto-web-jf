@@ -238,10 +238,6 @@ export abstract class BaseService<T extends BaseEntity>
       queryBuilder = this.setFilters(alias, filters, queryBuilder);
     }
 
-    // if (orderBy) {
-    //   queryBuilder = this.setOrderBy(alias, orderBy, queryBuilder);
-    // }
-
     return queryBuilder;
   }
 
@@ -274,46 +270,6 @@ export abstract class BaseService<T extends BaseEntity>
     const joined: string[] = [];
     join.forEach((entity) => {
       queryBuilder = this.addJoin(queryBuilder, entity, rootEntity, joined);
-    });
-    return queryBuilder;
-  }
-
-  protected setOrderBy(
-    alias: string,
-    orderBy: { [field: string]: 'asc' | 'desc' },
-    queryBuilder: SelectQueryBuilder<any>,
-  ): SelectQueryBuilder<any> {
-    const orderFields = orderBy;
-    Object.keys(orderFields).forEach((key: string, i: number) => {
-      const orderDirection = (<any>orderFields)[key].toUpperCase() as
-        | 'ASC'
-        | 'DESC';
-
-      let field: string;
-
-      if (key.indexOf('.') < 0) {
-        field = `${alias}.${key}`;
-      } else {
-        const splitted = key.split('.');
-
-        const root = splitted[splitted.length - 2];
-
-        field = `${root}.${splitted[splitted.length - 1]}`;
-
-        if (
-          this.repository.metadata.allEmbeddeds.find(
-            (emb) => emb.propertyName === root,
-          ) != null
-        ) {
-          field = `${alias}.${field}`;
-        }
-      }
-
-      if (i > 0) {
-        queryBuilder = queryBuilder.addOrderBy(field, orderDirection);
-      } else {
-        queryBuilder = queryBuilder.orderBy(field, orderDirection);
-      }
     });
     return queryBuilder;
   }

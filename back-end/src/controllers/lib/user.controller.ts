@@ -1,6 +1,13 @@
 import { Mapper } from '@automapper/core';
 import { InjectMapper } from '@automapper/nestjs';
-import { BadRequestException, Controller, Logger } from '@nestjs/common';
+import {
+  BadRequestException,
+  Controller,
+  Logger,
+  Param,
+  Put,
+  Req,
+} from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { UserEntity, UserService } from '../../services/index';
 import { EntityType } from '@common';
@@ -81,7 +88,7 @@ export class UserController extends BaseController<
     return { ...dto, passwordHash: '*****' };
   }
 
-  protected override async deleteImplementation(
+  protected async softDeleteImplementation(
     req: AuthenticatedRequest,
     id: string,
   ) {
@@ -103,7 +110,16 @@ export class UserController extends BaseController<
       role: 0,
     } as UserEntity;
 
-    await this.service.update(req.user.id, id, deletedUser);
+    return await this.service.update(req.user.id, id, deletedUser);
+  }
+
+  @Put('soft-delete/:id')
+  async softDelete(
+    @Param('id') id: string,
+    @Req()
+    req: AuthenticatedRequest,
+  ) {
+    return await this.softDeleteImplementation(req, id);
   }
 
   protected async hashPassword(password: string) {

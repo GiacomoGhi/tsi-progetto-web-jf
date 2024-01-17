@@ -37,6 +37,7 @@ export abstract class BaseService<T extends BaseEntity>
   async findPaged(
     take: number,
     skip: number,
+    filters?: { field: string; value: string }[],
     orderBy?: { [field: string]: 'asc' | 'desc' },
     join: string[] = [],
     overwriteJoin = false,
@@ -46,7 +47,12 @@ export abstract class BaseService<T extends BaseEntity>
       ? join
       : [...this.findManyDefaultRelations, ...join];
 
-    let queryBuilder = this.buildQuerySelect(relations, orderBy, manager);
+    let queryBuilder = this.buildQuerySelect(
+      relations,
+      orderBy,
+      manager,
+      filters,
+    );
 
     // skip, take
     queryBuilder = queryBuilder.skip(skip).take(take);
@@ -216,6 +222,7 @@ export abstract class BaseService<T extends BaseEntity>
     join: string[],
     orderBy?: { [field: string]: 'asc' | 'desc' },
     manager = this.repository.manager,
+    filters?: { field: string; value: string }[],
   ): SelectQueryBuilder<T> {
     const alias = this.repository.metadata.targetName;
     let queryBuilder = manager
@@ -227,9 +234,13 @@ export abstract class BaseService<T extends BaseEntity>
 
     queryBuilder = this.setJoin(alias, join, queryBuilder);
 
-    if (orderBy) {
-      queryBuilder = this.setOrderBy(alias, orderBy, queryBuilder);
+    if (filters) {
+      queryBuilder = this.setFilters(alias, filters, queryBuilder);
     }
+
+    // if (orderBy) {
+    //   queryBuilder = this.setOrderBy(alias, orderBy, queryBuilder);
+    // }
 
     return queryBuilder;
   }
@@ -302,6 +313,31 @@ export abstract class BaseService<T extends BaseEntity>
         queryBuilder = queryBuilder.addOrderBy(field, orderDirection);
       } else {
         queryBuilder = queryBuilder.orderBy(field, orderDirection);
+      }
+    });
+    return queryBuilder;
+  }
+
+  protected setFilters(
+    alias: string,
+    filters: { field: string; value: string }[],
+    queryBuilder: SelectQueryBuilder<any>,
+  ) {
+    filters.forEach((filter, i) => {
+      if (i === 0) {
+        queryBuilder.where(
+          `"${alias}"."${filter.field}" like '%${filter.value}%'`,
+          {
+            value: filter.value,
+          },
+        );
+      } else {
+        queryBuilder.andWhere(
+          `"${alias}"."${filter.field}" like '%${filter.value}%'`,
+          {
+            value: filter.value,
+          },
+        );
       }
     });
     return queryBuilder;

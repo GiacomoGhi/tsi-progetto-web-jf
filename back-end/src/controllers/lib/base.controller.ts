@@ -96,6 +96,10 @@ export class BaseController<
           type: 'object',
           default: {},
         },
+        filters: {
+          type: 'array',
+          default: [],
+        },
         take: { type: 'number', default: 20 },
         skip: { type: 'number', default: 0 },
       },
@@ -108,6 +112,7 @@ export class BaseController<
       take: number;
       skip: number;
       join: string[];
+      filters?: { field: string; value: string }[];
     },
     @Req()
     req: AuthenticatedRequest,
@@ -122,6 +127,7 @@ export class BaseController<
       take: number;
       skip: number;
       join: string[];
+      filters?: { field: string; value: string }[];
     },
   ) {
     const join = union(body.join || []);
@@ -129,6 +135,7 @@ export class BaseController<
     const res = await this.service.findPaged(
       body.take,
       body.skip,
+      body.filters,
       body.orderBy,
       join,
       body.join != null, // se vengono passate esplicitamente delle relations, sovrascrivo quelle base

@@ -8,6 +8,7 @@ import { BaseController } from './base.controller';
 import { UserEntityDto } from './dto/user-entity.dto';
 import { AuthenticatedRequest } from './guards/authenticated-request.interface';
 import * as bcrypt from 'bcrypt';
+import { union } from 'lodash';
 
 @Controller('user')
 @ApiTags('user')
@@ -23,6 +24,37 @@ export class UserController extends BaseController<
     @InjectMapper('mapper') mapper: Mapper,
   ) {
     super(service, logger, mapper);
+  }
+
+  protected override async getPagedImplementation(
+    req: AuthenticatedRequest,
+    body: {
+      orderBy?: { [field: string]: 'asc' | 'desc' } | undefined;
+      take: number;
+      skip: number;
+      join: string[];
+      filters?: { field: string; value: string }[];
+    },
+  ) {
+    const join = union(body.join || []);
+
+    const res = await this.service.findPaged(
+      body.take,
+      body.skip,
+      body.filters,
+      body.orderBy,
+      join,
+      body.join != null, // se vengono passate esplicitamente delle relations, sovrascrivo quelle base
+    );
+
+    const dtos: UserEntityDto[] = [];
+    for (const item of res.items) {
+      const dto = this.mapToDto(item);
+
+      dtos.push({ ...dto, passwordHash: '*****' });
+    }
+
+    return { ...res, items: dtos };
   }
 
   protected override async updateImplementation(
@@ -46,7 +78,7 @@ export class UserController extends BaseController<
     );
     const dto: UserEntityDto = this.mapToDto(updatedItem);
 
-    return dto;
+    return { ...dto, passwordHash: '*****' };
   }
 
   protected override async deleteImplementation(

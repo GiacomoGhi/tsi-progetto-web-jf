@@ -45,6 +45,19 @@ const AdminUsersAction = () => {
     }
   }
 
+  const upgradeAndReplace = async (indexId: number, currentRole: string) => {
+    const { apiClient } = App
+    const userToUpdate = users[indexId]
+    const newRole = currentRole === '0' ? '1' : '0'
+    const response = await apiClient.users.update(userToUpdate.id, { role: newRole, active: true })
+
+    if (!response.hasErrors && response.data) {
+      const newUserList = [...users]
+      newUserList[indexId] = response.data
+      setUsers(newUserList)
+    }
+  }
+
   const deleteAndReplace = async (indexId: number) => {
     const { apiClient } = App
     const userToUpdate = users[indexId]
@@ -63,6 +76,9 @@ const AdminUsersAction = () => {
 
   const handleUpdateAndReplace = (indexId: number) => {
     updateAndReplace(indexId)
+  }
+  const handleUpgradeAndReplace = (indexId: number, role: string) => {
+    upgradeAndReplace(indexId, role)
   }
 
   const handleDeleteAndReplace = () => {
@@ -100,7 +116,7 @@ const AdminUsersAction = () => {
     <>
       <Modal isOpen={deleteConfermation} onClose={() => setDeleteConfermation(false)}>
         <div className="mt-4 p-4">
-          <h1 className="text-danger">Stai eliminando l'account di {users[userListIndex].nickName}</h1>
+          <h1 className="text-danger">Stai eliminando l'account di {users[userListIndex]?.nickName}</h1>
           <h2 className="mb-5">Vuoi veramente procedere?</h2>
           <div className="row mb-sm-3 text-center">
             <div className="col-6">
@@ -155,7 +171,16 @@ const AdminUsersAction = () => {
                     <tr key={i}>
                       <td>{user.name}</td>
                       <td>{user.nickName}</td>
-                      <td>{user.role}</td>
+                      <td>
+                        <button
+                          className="button"
+                          disabled={user.email.includes('*')}
+                          onClick={() => {
+                            handleUpgradeAndReplace(i, user.role === '1' ? '1' : '0')
+                          }}>
+                          {user.role === '1' ? 'Admin' : 'User'}
+                        </button>
+                      </td>
                       <td>
                         {user.active ? (
                           <button className="text-danger button" onClick={() => handleUpdateAndReplace(i)}>

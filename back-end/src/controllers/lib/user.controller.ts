@@ -7,15 +7,17 @@ import {
   Param,
   Put,
   Req,
+  UseGuards,
 } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { UserEntity, UserService } from '../../services/index';
-import { EntityType } from '@common';
+import { EntityType, JwtAuthGuard } from '@common';
 import { BaseController } from './base.controller';
 import { UserEntityDto } from './dto/user-entity.dto';
 import { AuthenticatedRequest } from './guards/authenticated-request.interface';
 import * as bcrypt from 'bcrypt';
 import { union } from 'lodash';
+import { RolesGuard } from './guards/roles.guard';
 
 @Controller('user')
 @ApiTags('user')
@@ -113,6 +115,8 @@ export class UserController extends BaseController<
     return await this.service.update(req.user.id, id, deletedUser);
   }
 
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @ApiBearerAuth()
   @Put('soft-delete/:id')
   async softDelete(
     @Param('id') id: string,

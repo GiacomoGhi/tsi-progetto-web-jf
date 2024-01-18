@@ -48,5 +48,6 @@
   &:disabled {
     color: gray !important;
     text-decoration: none;
+    cursor: default;
   }
 }

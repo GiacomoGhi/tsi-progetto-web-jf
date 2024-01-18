@@ -5,7 +5,7 @@ import { ApiProperty } from '@nestjs/swagger';
 export class ArticleEntityDto extends BaseEntityDto {
   @ApiProperty()
   @AutoMap()
-  title: string;
+  title!: string;
 
   @ApiProperty()
   @AutoMap()

@@ -5,11 +5,11 @@ import { ApiProperty } from '@nestjs/swagger';
 export class HitEntityDto extends BaseEntityDto {
   @ApiProperty()
   @AutoMap()
-  topic: string;
+  topic!: string;
 
   @ApiProperty()
   @AutoMap()
-  author: string;
+  author!: string;
 
   @AutoMap()
   createdByUserId?: string;

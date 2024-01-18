@@ -5,11 +5,11 @@ import { ApiProperty } from '@nestjs/swagger';
 export class DictionaryEntityDto extends BaseEntityDto {
   @ApiProperty()
   @AutoMap()
-  listKey: string;
+  listKey!: string;
 
   @ApiProperty()
   @AutoMap()
-  listValue?: string;
+  listValue!: string;
 
   @AutoMap()
   createdByUserId?: string;

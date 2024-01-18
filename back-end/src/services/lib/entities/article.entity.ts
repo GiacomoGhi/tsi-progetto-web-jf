@@ -22,7 +22,7 @@ export class ArticleEntity extends BaseEntity {
   image: string;
 
   @AutoMap()
-  @Column('text', { nullable: true })
+  @Column('boolean', { nullable: true })
   isNews: boolean;
 
   @ManyToOne(() => UserEntity, { createForeignKeyConstraints: false })

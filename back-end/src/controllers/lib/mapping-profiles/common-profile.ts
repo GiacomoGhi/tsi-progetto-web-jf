@@ -112,6 +112,10 @@ export class CommonProfile extends AutomapperProfile {
           (t) => t.lastModifiedByUserEmail,
           mapFrom((s) => s.lastModifiedByUser?.email),
         ),
+        forMember(
+          (t) => t.author,
+          mapFrom((s) => s.createdByUser.nickName),
+        ),
       );
     };
   }

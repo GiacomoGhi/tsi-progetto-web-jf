@@ -30,8 +30,6 @@ import { AuthenticatedRequest } from './guards/authenticated-request.interface';
 import { RolesGuard } from './guards/roles.guard';
 import { union } from 'lodash';
 
-@UseGuards(JwtAuthGuard, RolesGuard)
-@ApiBearerAuth()
 export class BaseController<
   T extends BaseEntity,
   TService extends BaseService<T>,
@@ -58,6 +56,8 @@ export class BaseController<
     this.entityDto = entityTypeMetadata.entityDto;
   }
 
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @ApiBearerAuth()
   @Post('paged')
   @HttpCode(200)
   @ApiOperation({
@@ -151,6 +151,8 @@ export class BaseController<
     return { ...res, items: dtos };
   }
 
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @ApiBearerAuth()
   @Get(':id')
   async getSingle(
     @Param('id', ParseUUIDPipe) id: string,
@@ -171,6 +173,8 @@ export class BaseController<
     return dto;
   }
 
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @ApiBearerAuth()
   @Post()
   @ApiBody({
     schema: {
@@ -204,6 +208,8 @@ export class BaseController<
     return dto;
   }
 
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @ApiBearerAuth()
   @Put(':id')
   @ApiBody({
     schema: {
@@ -240,6 +246,8 @@ export class BaseController<
     return dto;
   }
 
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @ApiBearerAuth()
   @Delete(':id')
   //@Roles(Role.Admin)
   async delete(

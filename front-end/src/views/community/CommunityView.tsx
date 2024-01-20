@@ -40,16 +40,26 @@ const CommunityView = () => {
 
   const getHitCountForArticle = async (data: ArticleDto[]) => {
     const { apiClient } = App
+    let articleHits: HitsStruct[] = []
 
     for (let i = 0; i < data.length; i++) {
       const article = data[i]
       const response = await apiClient.hits.paged({
-        from: 0,
+        from: 1,
         to: 0,
         filters: [{ field: 'articleId', value: article.id }]
       })
-      console.log('resp')
+      if (!response.hasErrors && response.data) {
+        articleHits = [
+          ...articleHits,
+          {
+            articleId: article.id,
+            hits: response.data.totalCount
+          }
+        ]
+      }
     }
+    setHits(articleHits)
   }
 
   useEffect(() => {
@@ -73,8 +83,6 @@ const CommunityView = () => {
     fetchItems(10, 0)
   }, [])
 
-  useEffect(() => {})
-
   return (
     <>
       <h1 className="ms-3 my-4">Post degli utenti</h1>
@@ -88,7 +96,7 @@ const CommunityView = () => {
                 <div className="mt-3">
                   <input type="checkbox" id="myCheckbox" name="myCheckbox" aria-labelledby="checkboxLabel" />
                   <label htmlFor="myCheckbox" className="ms-1 mb-1" id="checkboxLabel">
-                    Interessante: {0}
+                    Interessante: {hits.find(hit => hit.articleId === article.id)?.hits || 0}
                   </label>
                 </div>
                 <button className="button">Leggi Tutto</button>

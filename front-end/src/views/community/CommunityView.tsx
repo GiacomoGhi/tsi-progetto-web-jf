@@ -56,13 +56,28 @@ const CommunityView = () => {
 
   return (
     <>
-      <div className="scrollableContainer" ref={containerRef}>
+      <h1 className="ms-3 my-4">Post degli utenti</h1>
+      <div className="scrollableContainerr mx-3 row pt-3" ref={containerRef}>
         {articles.map((article, i) => (
-          <div key={i} className="borderContainer">
-            <h2>{article.title}</h2>
-            <p>{article.description}</p>
+          <div key={i} className="col-md-6 px-2">
+            <div className="borderContainer p-3">
+              <h2>{article.title}</h2>
+              <p className="mb-0">{article.description.slice(0, 200)}...</p>
+              <div className="d-flex justify-content-between">
+                <div className="mt-3">
+                  <input type="checkbox" id="myCheckbox" name="myCheckbox" aria-labelledby="checkboxLabel" />
+                  <label htmlFor="myCheckbox" className="ms-1 mb-1" id="checkboxLabel">
+                    Interessante: {0}
+                  </label>
+                </div>
+                <button className="button">Leggi Tutto</button>
+              </div>
+            </div>
           </div>
         ))}
+      </div>
+      <div className="d-flex justify-content-end">
+        <button className="button me-3 mb-4 mt-3">{'<< Scrivi un nuovo post  >>'}</button>
       </div>
     </>
   )

@@ -1,4 +1,4 @@
-import { Repository } from 'typeorm';
+import { Repository, SelectQueryBuilder } from 'typeorm';
 
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -18,5 +18,27 @@ export class HitService extends BaseService<HitEntity> {
     logger: Logger,
   ) {
     super(repo, logger);
+  }
+
+  protected override setFilters(
+    alias: string,
+    filters: { field: string; value: string }[],
+    queryBuilder: SelectQueryBuilder<any>,
+  ) {
+    filters.forEach((filter, i) => {
+      if (i === 0) {
+        queryBuilder.where(`"${alias}"."${filter.field}" = '${filter.value}'`, {
+          value: filter.value,
+        });
+      } else {
+        queryBuilder.andWhere(
+          `"${alias}"."${filter.field}" = '${filter.value}'`,
+          {
+            value: filter.value,
+          },
+        );
+      }
+    });
+    return queryBuilder;
   }
 }

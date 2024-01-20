@@ -3,13 +3,14 @@ import './CommunityView.styles.scss'
 import App from 'App'
 import { ArticleDto } from 'infrastructure/api-client/dto/article.dto'
 
-type HitsStruct = { articleId: string; hits: number }
+type HitsStruct = { articleId: string; hits: number; checked: boolean }
 
 const CommunityView = () => {
   const [articles, setArticles] = useState<ArticleDto[]>([])
   const [articlesCount, setArticlesCount] = useState(0)
   const [searchText, setSearchText] = useState('')
   const [hits, setHits] = useState<HitsStruct[]>([])
+  const [checked, setChecked] = useState(false)
   const containerRef = useRef<HTMLDivElement | null>(null)
 
   const fetchItems = async (from: number, to: number, filtered = false) => {
@@ -34,10 +35,6 @@ const CommunityView = () => {
     }
   }
 
-  const handleFilterSelected = () => {
-    fetchItems(10, 0, true)
-  }
-
   const getHitCountForArticle = async (data: ArticleDto[]) => {
     const { apiClient } = App
     let articleHits: HitsStruct[] = []
@@ -54,12 +51,26 @@ const CommunityView = () => {
           ...articleHits,
           {
             articleId: article.id,
-            hits: response.data.totalCount
+            hits: response.data.totalCount,
+            checked: false
           }
         ]
       }
     }
     setHits(articleHits)
+  }
+
+  const handleHitCheck = (articleId: string) => {
+    setHits(prevHits => {
+      const index = prevHits.findIndex(hit => hit.articleId === articleId)
+      const updatedHits = [...prevHits]
+      updatedHits[index] = { ...updatedHits[index], checked: !updatedHits[index].checked }
+      return updatedHits
+    })
+  }
+
+  const handleFilterSelected = () => {
+    fetchItems(10, 0, true)
   }
 
   useEffect(() => {
@@ -94,7 +105,16 @@ const CommunityView = () => {
               <p className="mb-0">{article.description.slice(0, 200)}...</p>
               <div className="d-flex justify-content-between">
                 <div className="mt-3">
-                  <input type="checkbox" id="myCheckbox" name="myCheckbox" aria-labelledby="checkboxLabel" />
+                  <input
+                    type="checkbox"
+                    id="myCheckbox"
+                    name="myCheckbox"
+                    aria-labelledby="checkboxLabel"
+                    checked={hits.find(hit => hit.articleId === article.id)?.checked || false}
+                    onChange={() => {
+                      handleHitCheck(article.id)
+                    }}
+                  />
                   <label htmlFor="myCheckbox" className="ms-1 mb-1" id="checkboxLabel">
                     Interessante: {hits.find(hit => hit.articleId === article.id)?.hits || 0}
                   </label>

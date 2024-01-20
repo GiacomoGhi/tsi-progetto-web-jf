@@ -1,12 +1,15 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import './CommunityView.styles.scss'
 import App from 'App'
 import { ArticleDto } from 'infrastructure/api-client/dto/article.dto'
+
+type HitsStruct = { articleId: string; hits: number }
 
 const CommunityView = () => {
   const [articles, setArticles] = useState<ArticleDto[]>([])
   const [articlesCount, setArticlesCount] = useState(0)
   const [searchText, setSearchText] = useState('')
+  const [hits, setHits] = useState<HitsStruct[]>([])
   const containerRef = useRef<HTMLDivElement | null>(null)
 
   const fetchItems = async (from: number, to: number, filtered = false) => {
@@ -20,9 +23,11 @@ const CommunityView = () => {
     if (!response.hasErrors && response.data) {
       const data = [...articles, ...response.data.items]
       if (filtered) {
+        await getHitCountForArticle(response.data.items)
         setArticlesCount(response.data.totalCount)
         setArticles(response.data.items)
       } else {
+        await getHitCountForArticle(data)
         setArticlesCount(response.data.totalCount)
         setArticles(data)
       }
@@ -31,6 +36,20 @@ const CommunityView = () => {
 
   const handleFilterSelected = () => {
     fetchItems(10, 0, true)
+  }
+
+  const getHitCountForArticle = async (data: ArticleDto[]) => {
+    const { apiClient } = App
+
+    for (let i = 0; i < data.length; i++) {
+      const article = data[i]
+      const response = await apiClient.hits.paged({
+        from: 0,
+        to: 0,
+        filters: [{ field: 'articleId', value: article.id }]
+      })
+      console.log('resp')
+    }
   }
 
   useEffect(() => {
@@ -53,6 +72,8 @@ const CommunityView = () => {
   useEffect(() => {
     fetchItems(10, 0)
   }, [])
+
+  useEffect(() => {})
 
   return (
     <>

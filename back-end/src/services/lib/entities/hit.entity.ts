@@ -9,12 +9,8 @@ import { BaseEntity } from './base.entity';
 })
 export class HitEntity extends BaseEntity {
   @AutoMap()
-  @Column('varchar')
-  topic!: string;
-
-  @AutoMap()
-  @Column('varchar')
-  author!: string;
+  @Column('uuid')
+  articleId!: string;
 
   @ManyToOne(() => UserEntity, { createForeignKeyConstraints: false })
   @AutoMap(() => UserEntity)

@@ -1,8 +1,9 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import './CommunityView.styles.scss'
 import App from 'App'
 import { ArticleDto } from 'infrastructure/api-client/dto/article.dto'
 import { HitDto } from 'infrastructure/api-client/dto/hit.dto'
+import { UserDto } from 'infrastructure/api-client/dto/user.dto'
 
 type HitsStruct = { articleId: string; hits: number; checked: boolean }
 
@@ -10,6 +11,7 @@ const CommunityView = () => {
   const [articles, setArticles] = useState<ArticleDto[]>([])
   const [articlesCount, setArticlesCount] = useState(0)
   const [searchText, setSearchText] = useState('')
+  const [user, setUser] = useState<UserDto>()
   const [hits, setHits] = useState<HitsStruct[]>([])
   const [checked, setChecked] = useState(false)
   const containerRef = useRef<HTMLDivElement | null>(null)
@@ -36,17 +38,28 @@ const CommunityView = () => {
     }
   }
 
-  const getHitCountForArticle = async (data: ArticleDto[]) => {
+  const getLoggdUser = async () => {
     const { apiClient } = App
-    let articleHits: HitsStruct[] = []
 
     const currentUser = await apiClient.loggedUser.check()
     if (currentUser.hasErrors || !currentUser.data) return
 
+    return currentUser.data
+  }
+
+  const getHitCountForArticle = async (data: ArticleDto[]) => {
+    const { apiClient } = App
+    let articleHits: HitsStruct[] = []
+
+    const loggedUser: UserDto = await getLoggdUser()
+    setUser(loggedUser)
+
+    if (!loggedUser) return
+
     const userLikedArticlesResponse = await apiClient.hits.paged({
       from: 9999,
       to: 0,
-      filters: [{ field: 'createdByUserId', value: currentUser.data.id }]
+      filters: [{ field: 'createdByUserId', value: loggedUser.id }]
     })
 
     let userLikedArticles: HitDto[] = []
@@ -54,7 +67,6 @@ const CommunityView = () => {
     if (!userLikedArticlesResponse.hasErrors && userLikedArticlesResponse.data) {
       userLikedArticles = userLikedArticlesResponse.data.items
     }
-    console.log(userLikedArticles)
 
     for (let i = 0; i < data.length; i++) {
       const article = data[i]
@@ -77,16 +89,59 @@ const CommunityView = () => {
         ]
       }
     }
+    console.log(articleHits)
+
     setHits(articleHits)
   }
 
   const handleHitCheck = (articleId: string) => {
+    const isLiked = hits.find(hit => hit.articleId === articleId)?.checked
+
+    if (isLiked && user) {
+      deleteHit(articleId, user.id)
+    }
+
+    if (!isLiked && user) {
+      console.log('create')
+      createHit(articleId)
+    }
     setHits(prevHits => {
       const index = prevHits.findIndex(hit => hit.articleId === articleId)
       const updatedHits = [...prevHits]
-      updatedHits[index] = { ...updatedHits[index], checked: !updatedHits[index].checked }
+      const isLiked = updatedHits[index].checked
+      const hitsNum = updatedHits[index].hits
+      updatedHits[index] = {
+        ...updatedHits[index],
+        hits: isLiked ? hitsNum - 1 : hitsNum + 1,
+        checked: !updatedHits[index].checked
+      }
       return updatedHits
     })
+  }
+
+  const createHit = async (articleId: string) => {
+    const { apiClient } = App
+
+    const response = await apiClient.hits.create({ articleId: articleId })
+  }
+
+  const deleteHit = async (articleId: string, userId: string) => {
+    const { apiClient } = App
+
+    const hitToDelete = await apiClient.hits.paged({
+      from: 1,
+      to: 0,
+      filters: [
+        { field: 'articleId', value: articleId },
+        { field: 'createdByUserId', value: userId }
+      ]
+    })
+
+    console.log(hitToDelete)
+
+    if (!hitToDelete.hasErrors && hitToDelete.data) {
+      const response = await apiClient.hits.delete(hitToDelete.data.items[0].id)
+    }
   }
 
   const handleFilterSelected = () => {

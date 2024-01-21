@@ -1,4 +1,7 @@
 import React from 'react'
+import { Carousel } from 'react-bootstrap'
+import 'bootstrap/dist/css/bootstrap.min.css' // Assicurati di importare il CSS di Bootstrap
+
 import {
   CreatingARWebsiteWithARJS,
   ARBodySystems,
@@ -11,7 +14,6 @@ import {
   RemoteSupport,
   Scarpe
 } from 'assets'
-import './HomeView.styles.scss'
 
 function HomeView() {
   const imgPaths = [
@@ -43,36 +45,19 @@ function HomeView() {
             <li className="py-4">Iscriverti come fan sfegatato del corso di laurea più figo di tutti</li>
           </ul>
         </div>
-        <div
-          id="carouselExampleAutoplaying"
-          className="col-md-6 z-n1 carousel align-self-center slide carousel-fade"
-          data-bs-ride="carousel">
-          <div className="carousel-inner">
-            <div className="carousel-item active">
-              <img src={imgPaths[0]} className="mx-auto d-block img-fluid" alt="Immagine esempio AR" />
-            </div>
-            {imgPaths.map((path, i) => {
-              if (i !== 0)
-                return (
-                  <div className="carousel-item" key={i}>
-                    <img src={path} className="mx-auto d-block img-fluid" alt="Immagine esempio AR" />
-                  </div>
-                )
-            })}
-          </div>
-        </div>
-      </div>
-      <div className="row pb-5" id="ar-image">
-        <div className="col-md-6">
-          <img src={ARBodySystems} className="mx-auto d-block img-fluid" alt="AR Body Systems" />
-        </div>
-        <div className="col-md-6 py-4 text-black">
-          <p className="py-4">
-            La realtà aumentata (AR) è una tecnologia che sovrappone elementi digitali al mondo reale attraverso l'uso
-            di dispositivi come telefoni, tablet o occhiali AR. Questa tecnologia offre opportunità entusiasmanti nei
-            settori dell'istruzione, dell'industria, della salute e molto altro ancora. Scopri le potenzialità della
-            Realtà Aumentata attraverso il nostro sito e impara come implementarla nelle tue applicazioni web.
-          </p>
+        <div className="col-md-6 z-n1">
+          <Carousel>
+            {imgPaths.map((path, i) => (
+              <Carousel.Item key={i}>
+                <img
+                  className="d-block w-100"
+                  src={path}
+                  alt={`Immagine esempio AR ${i}`}
+                  style={{ height: '300px' }}
+                />
+              </Carousel.Item>
+            ))}
+          </Carousel>
         </div>
       </div>
     </div>

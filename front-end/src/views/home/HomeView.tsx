@@ -83,6 +83,27 @@ function HomeView() {
           </div>
         </div>
       )}
+
+      {/* Sezione video di YouTube per l'ingegneria civile (BIM) */}
+      <div className="row">
+        <div className="col-md-12">
+          <h3>Utilizzo della Realtà Aumentata nell'Ingegneria Civile (BIM)</h3>
+          <p>
+            Scopri come la Realtà Aumentata sta trasformando l'ingegneria civile attraverso l'implementazione del
+            Building Information Modeling (BIM). Guarda il video per comprendere le nuove possibilità e le sfide
+            affrontate nel settore.
+          </p>
+
+          <iframe
+            width="100%"
+            height="300"
+            src="https://www.youtube.com/embed/r_lsprNpm88"
+            title="YouTube video player"
+            frameBorder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen></iframe>
+        </div>
+      </div>
     </div>
   )
 }

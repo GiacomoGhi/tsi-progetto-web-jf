@@ -1,6 +1,6 @@
 import React from 'react'
 import { Carousel } from 'react-bootstrap'
-import 'bootstrap/dist/css/bootstrap.min.css' // Assicurati di importare il CSS di Bootstrap
+import 'bootstrap/dist/css/bootstrap.min.css'
 
 import {
   CreatingARWebsiteWithARJS,
@@ -18,7 +18,6 @@ import {
 function HomeView() {
   const imgPaths = [
     CreatingARWebsiteWithARJS,
-    ARBodySystems,
     AugmentedReality,
     Ikea2,
     Industry40,
@@ -26,7 +25,8 @@ function HomeView() {
     Localize,
     Manutenzione,
     RemoteSupport,
-    Scarpe
+    Scarpe,
+    ARBodySystems // Aggiunto ARBodySystems alla fine dell'array
   ]
 
   return (
@@ -60,6 +60,29 @@ function HomeView() {
           </Carousel>
         </div>
       </div>
+
+      {/* Contenuto specifico per ARBodySystems */}
+      {imgPaths.includes(ARBodySystems) && (
+        <div className="row pb-5" id="ar-medical">
+          <div className="col-md-6">
+            <img
+              src={ARBodySystems}
+              className="mx-auto d-block img-fluid"
+              alt="AR Body Systems Medical"
+              style={{ height: '300px' }}
+            />
+          </div>
+          <div className="col-md-6 py-4 text-black">
+            <h3>Applicazioni della Realtà Aumentata nella Diagnostica Medica</h3>
+            <p>
+              La Realtà Aumentata (AR) offre un'ampia gamma di applicazioni nella diagnostica medica, rivoluzionando il
+              modo in cui vengono effettuate le diagnosi e gestite le operazioni. Attraverso l'utilizzo di dispositivi
+              AR, i medici possono visualizzare dati cruciali in tempo reale, migliorando la precisione delle diagnosi e
+              semplificando le procedure mediche complesse.
+            </p>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

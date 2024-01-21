@@ -106,7 +106,7 @@ const NewsView = () => {
               <p className="mb-0">{article.description.slice(0, 200)}...</p>
               <div className="d-flex justify-content-between">
                 <div className="mt-3">
-                  <input
+                  {/*                   <input
                     type="checkbox"
                     id="myCheckbox"
                     name="myCheckbox"
@@ -115,7 +115,7 @@ const NewsView = () => {
                     onChange={() => {
                       handleHitCheck(article.id)
                     }}
-                  />
+                  /> */}
                   <label htmlFor="myCheckbox" className="ms-1 mb-1" id="checkboxLabel">
                     Interessante: {hits.find(hit => hit.articleId === article.id)?.hits || 0}
                   </label>
@@ -126,9 +126,9 @@ const NewsView = () => {
           </div>
         ))}
       </div>
-      <div className="d-flex justify-content-end">
+      {/*       <div className="d-flex justify-content-end">
         <button className="button me-3 mb-4 mt-3">{'<< Scrivi un nuovo post  >>'}</button>
-      </div>
+      </div> */}
     </>
   )
 }

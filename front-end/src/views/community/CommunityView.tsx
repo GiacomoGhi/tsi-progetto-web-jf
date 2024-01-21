@@ -13,7 +13,6 @@ const CommunityView = () => {
   const [searchText, setSearchText] = useState('')
   const [user, setUser] = useState<UserDto>()
   const [hits, setHits] = useState<HitsStruct[]>([])
-  const [checked, setChecked] = useState(false)
   const containerRef = useRef<HTMLDivElement | null>(null)
 
   const fetchItems = async (from: number, to: number, filtered = false) => {
@@ -21,7 +20,8 @@ const CommunityView = () => {
 
     const response = await apiClient.articles.paged({
       from,
-      to
+      to,
+      filters: [{ field: 'title', value: searchText }]
     })
 
     if (!response.hasErrors && response.data) {
@@ -122,7 +122,7 @@ const CommunityView = () => {
   const createHit = async (articleId: string) => {
     const { apiClient } = App
 
-    const response = await apiClient.hits.create({ articleId: articleId })
+    await apiClient.hits.create({ articleId: articleId })
   }
 
   const deleteHit = async (articleId: string, userId: string) => {
@@ -140,7 +140,7 @@ const CommunityView = () => {
     console.log(hitToDelete)
 
     if (!hitToDelete.hasErrors && hitToDelete.data) {
-      const response = await apiClient.hits.delete(hitToDelete.data.items[0].id)
+      await apiClient.hits.delete(hitToDelete.data.items[0].id)
     }
   }
 
@@ -171,7 +171,26 @@ const CommunityView = () => {
 
   return (
     <>
-      <h1 className="ms-3 my-4">Post degli utenti</h1>
+      <div className="row text-center mb-3 pt-2 ms-3 my-4">
+        <div className="col-lg-6">
+          <h1 className="">Post degli utenti</h1>
+        </div>
+        <div className="col-lg-4 mt-2">
+          <input
+            className="form-control"
+            placeholder="Cerca un titolo"
+            type="text"
+            onChange={e => {
+              setSearchText(e.target.value)
+            }}
+          />
+        </div>
+        <div className="col-lg-1">
+          <button className="button" onClick={handleFilterSelected}>
+            Search
+          </button>
+        </div>
+      </div>
       <div className="scrollableContainerr mx-3 row pt-3" ref={containerRef}>
         {articles.map((article, i) => (
           <div key={i} className="col-md-6 px-2">

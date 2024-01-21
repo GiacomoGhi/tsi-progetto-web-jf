@@ -4,6 +4,7 @@ import App from 'App'
 import { ArticleDto } from 'infrastructure/api-client/dto/article.dto'
 import { HitDto } from 'infrastructure/api-client/dto/hit.dto'
 import { UserDto } from 'infrastructure/api-client/dto/user.dto'
+import Modal from 'components/modal-wrapper/ModalWrapper'
 
 type HitsStruct = { articleId: string; hits: number; checked: boolean }
 
@@ -13,6 +14,7 @@ const CommunityView = () => {
   const [searchText, setSearchText] = useState('')
   const [user, setUser] = useState<UserDto>()
   const [hits, setHits] = useState<HitsStruct[]>([])
+  const [showEditor, setShowEditor] = useState(false)
   const containerRef = useRef<HTMLDivElement | null>(null)
 
   const fetchItems = async (from: number, to: number, filtered = false) => {
@@ -94,6 +96,31 @@ const CommunityView = () => {
     setHits(articleHits)
   }
 
+  const createHit = async (articleId: string) => {
+    const { apiClient } = App
+
+    await apiClient.hits.create({ articleId: articleId })
+  }
+
+  const deleteHit = async (articleId: string, userId: string) => {
+    const { apiClient } = App
+
+    const hitToDelete = await apiClient.hits.paged({
+      from: 1,
+      to: 0,
+      filters: [
+        { field: 'articleId', value: articleId },
+        { field: 'createdByUserId', value: userId }
+      ]
+    })
+
+    console.log(hitToDelete)
+
+    if (!hitToDelete.hasErrors && hitToDelete.data) {
+      await apiClient.hits.delete(hitToDelete.data.items[0].id)
+    }
+  }
+
   const handleHitCheck = (articleId: string) => {
     const isLiked = hits.find(hit => hit.articleId === articleId)?.checked
 
@@ -119,29 +146,10 @@ const CommunityView = () => {
     })
   }
 
-  const createHit = async (articleId: string) => {
-    const { apiClient } = App
+  const handleDelete = () => {}
 
-    await apiClient.hits.create({ articleId: articleId })
-  }
-
-  const deleteHit = async (articleId: string, userId: string) => {
-    const { apiClient } = App
-
-    const hitToDelete = await apiClient.hits.paged({
-      from: 1,
-      to: 0,
-      filters: [
-        { field: 'articleId', value: articleId },
-        { field: 'createdByUserId', value: userId }
-      ]
-    })
-
-    console.log(hitToDelete)
-
-    if (!hitToDelete.hasErrors && hitToDelete.data) {
-      await apiClient.hits.delete(hitToDelete.data.items[0].id)
-    }
+  const handleModalClose = () => {
+    setShowEditor(false)
   }
 
   const handleFilterSelected = () => {
@@ -171,24 +179,60 @@ const CommunityView = () => {
 
   return (
     <>
-      <div className="row text-center mb-3 pt-2 ms-3 my-4">
-        <div className="col-lg-6">
-          <h1 className="">Post degli utenti</h1>
+      <Modal isOpen={showEditor} onClose={handleModalClose}>
+        <div className="d-flex container mt-4 p-4 justify-content-start">
+          <form>
+            <div className="row">
+              <div className="mb-3">
+                <label htmlFor="title"></label>
+                <textarea
+                  className="formContent"
+                  rows={1}
+                  placeholder="Titolo"
+                  id="title"
+                  name="title"
+                  maxLength={100}
+                  required
+                />
+              </div>
+              <div>
+                <label htmlFor="content"></label>
+                <textarea
+                  className="formContent"
+                  placeholder="contenuto"
+                  id="content"
+                  name="content"
+                  maxLength={4000}
+                  rows={8}
+                  required></textarea>
+              </div>
+            </div>
+            <button type="submit" className="button">
+              Submit
+            </button>
+          </form>
         </div>
-        <div className="col-lg-4 mt-2">
-          <input
-            className="form-control"
-            placeholder="Cerca un titolo"
-            type="text"
-            onChange={e => {
-              setSearchText(e.target.value)
-            }}
-          />
-        </div>
-        <div className="col-lg-1">
-          <button className="button" onClick={handleFilterSelected}>
-            Search
-          </button>
+      </Modal>
+      <div className="d-flex container">
+        <div className="row text-center mb-3 pt-2 ms-3 my-4">
+          <div className="col-lg-6">
+            <h1 className="">Post degli utenti</h1>
+          </div>
+          <div className="col-lg-4 mt-2">
+            <input
+              className="form-control"
+              placeholder="Cerca un titolo"
+              type="text"
+              onChange={e => {
+                setSearchText(e.target.value)
+              }}
+            />
+          </div>
+          <div className="col-lg-1">
+            <button className="button" onClick={handleFilterSelected}>
+              Search
+            </button>
+          </div>
         </div>
       </div>
       <div className="scrollableContainerr mx-3 row pt-3" ref={containerRef}>
@@ -220,7 +264,13 @@ const CommunityView = () => {
         ))}
       </div>
       <div className="d-flex justify-content-end">
-        <button className="button me-3 mb-4 mt-3">{'<< Scrivi un nuovo post  >>'}</button>
+        <button
+          className="button me-3 mb-4 mt-3"
+          onClick={() => {
+            setShowEditor(true)
+          }}>
+          {'<< Scrivi un nuovo post  >>'}
+        </button>
       </div>
     </>
   )

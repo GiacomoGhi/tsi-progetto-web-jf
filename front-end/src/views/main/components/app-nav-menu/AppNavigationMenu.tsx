@@ -35,7 +35,7 @@ function AppNavigationMenu() {
                   src={LogoBlu}
                   className="img-fluid mx-2"
                   alt="Logo unibo - link per sito web TSI"
-                  style={{ maxHeight: '100px' }}
+                  style={{ maxHeight: '80px' }}
                 />
               </a>
               <button

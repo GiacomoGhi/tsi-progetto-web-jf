@@ -4,7 +4,7 @@ import { Monogram } from 'assets'
 
 function AppFooter() {
   const [isClicked, setIsClicked] = useState(false)
-
+  // fisso clicked per attivare la rotazione al passaggio
   const handleLogoClick = () => {
     setIsClicked(!isClicked)
   }

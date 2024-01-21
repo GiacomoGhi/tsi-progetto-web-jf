@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useRef, useState } from 'react'
 import './CommunityView.styles.scss'
 import App from 'App'
 import { ArticleDto } from 'infrastructure/api-client/dto/article.dto'
+import { HitDto } from 'infrastructure/api-client/dto/hit.dto'
 
 type HitsStruct = { articleId: string; hits: number; checked: boolean }
 
@@ -39,6 +40,22 @@ const CommunityView = () => {
     const { apiClient } = App
     let articleHits: HitsStruct[] = []
 
+    const currentUser = await apiClient.loggedUser.check()
+    if (currentUser.hasErrors || !currentUser.data) return
+
+    const userLikedArticlesResponse = await apiClient.hits.paged({
+      from: 9999,
+      to: 0,
+      filters: [{ field: 'createdByUserId', value: currentUser.data.id }]
+    })
+
+    let userLikedArticles: HitDto[] = []
+
+    if (!userLikedArticlesResponse.hasErrors && userLikedArticlesResponse.data) {
+      userLikedArticles = userLikedArticlesResponse.data.items
+    }
+    console.log(userLikedArticles)
+
     for (let i = 0; i < data.length; i++) {
       const article = data[i]
       const response = await apiClient.hits.paged({
@@ -47,12 +64,15 @@ const CommunityView = () => {
         filters: [{ field: 'articleId', value: article.id }]
       })
       if (!response.hasErrors && response.data) {
+        const liked = userLikedArticles.some(item => item.articleId === article.id)
+        console.log(liked)
+
         articleHits = [
           ...articleHits,
           {
             articleId: article.id,
             hits: response.data.totalCount,
-            checked: false
+            checked: liked
           }
         ]
       }

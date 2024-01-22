@@ -10,6 +10,7 @@ import CommunityView from 'views/community/CommunityView'
 import ProfileView from 'views/profile/ProfileView'
 import PrivateRoute from './components/private-route/PrivateRoute'
 import LoginSingupWrapper from 'views/main/components/login-singup-wrapper/LoginSingupWrapper'
+import ArticleDetailView from 'views/article-details/ArticleDetailView'
 
 function MainView() {
   const { isInitialized, apiClient } = App
@@ -95,6 +96,7 @@ function MainView() {
                 <Route element={<PrivateRoute isAuth={isAuth} onFail={handleFail} />}>
                   <Route path="/community" element={<CommunityView />} />
                   <Route path="/profile" element={<ProfileView onLogout={handleLogout} />} />
+                  <Route path="/article-detail/:articleId" element={<ArticleDetailView />} />
                 </Route>
               </Routes>
               <LoginSingupWrapper

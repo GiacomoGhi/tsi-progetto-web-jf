@@ -5,6 +5,7 @@ import { ArticleDto } from 'infrastructure/api-client/dto/article.dto'
 import { HitDto } from 'infrastructure/api-client/dto/hit.dto'
 import { UserDto } from 'infrastructure/api-client/dto/user.dto'
 import Modal from 'components/modal-wrapper/ModalWrapper'
+import { useNavigate } from 'react-router-dom'
 
 type HitsStruct = { articleId: string; hits: number; checked: boolean }
 
@@ -18,6 +19,7 @@ const CommunityView = () => {
   const [articleDescription, setArticleDescription] = useState('')
   const [articleTitle, setArticleTitle] = useState('')
   const [saveStatus, setSaveStatus] = useState('')
+  const navigate = useNavigate()
   const containerRef = useRef<HTMLDivElement | null>(null)
 
   const fetchItems = async (from: number, to: number, filtered = false) => {
@@ -173,6 +175,10 @@ const CommunityView = () => {
     fetchItems(10, 0, true)
   }
 
+  const handleNavigation = (articleId: string) => {
+    navigate(`/article-detail/${articleId}`)
+  }
+
   useEffect(() => {
     const container = containerRef.current
     if (!container) return
@@ -294,7 +300,9 @@ const CommunityView = () => {
                     Interessante: {hits.find(hit => hit.articleId === article.id)?.hits || 0}
                   </label>
                 </div>
-                <button className="button">Leggi Tutto</button>
+                <button className="button" onClick={() => handleNavigation(article.id)}>
+                  Leggi Tutto
+                </button>
               </div>
             </div>
           </div>

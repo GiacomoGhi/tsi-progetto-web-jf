@@ -21,6 +21,7 @@ import Localize from './img/carosello3/localize.jpg'
 import Manutenzione from './img/carosello3/manutenzione.jpg'
 import RemoteSupport from './img/carosello3/remote support.jpg'
 import Scarpe from './img/carosello3/Scarpe.jpg'
+import Monogram from './img/monogram.png'
 export {
   AppleVisionPro,
   BOEDisplay,
@@ -29,6 +30,7 @@ export {
   SwordDamocles,
   Ivan,
   LogoBlu,
+  Monogram,
   TableBottom,
   TableTop,
   QuesitiTech,

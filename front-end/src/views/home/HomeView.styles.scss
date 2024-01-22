@@ -1,0 +1,65 @@
+@import '~bootstrap/dist/css/bootstrap.min.css';
+/* Aggiungi importazioni SCSS necessarie per Bootstrap o altri stili globali qui */
+
+/* Stili globali */
+body {
+  margin: 0;
+  font-family: 'Arial', sans-serif;
+}
+
+/* Stile del menu orizzontale */
+.menu-wrapper {
+  width: 100vw;
+  overflow: hidden;
+}
+
+.menu {
+  list-style-type: none;
+  display: flex;
+  padding: 0;
+  margin: 0;
+  transition: transform 0.5s ease;
+}
+
+.menu-item {
+  flex: 0 0 auto;
+  height: 100vh;
+  box-sizing: border-box;
+  padding: 20px;
+  text-align: center;
+  font-size: 18px;
+  color: #333;
+  border-right: 1px solid #ddd; /* Aggiungi una linea divisoria tra le sezioni se lo desideri */
+}
+
+.menu-item.active {
+  background-color: #f0f0f0; /* Aggiungi uno sfondo per indicare la sezione attiva */
+}
+
+/* Sostituisci '#your-color' con il colore desiderato per le frecce */
+.arrow {
+  font-size: 24px;
+  cursor: pointer;
+  padding: 20px;
+  color: navy;
+  user-select: none;
+}
+
+/* Stile del carosello Bootstrap */
+.carousel {
+  width: 100%;
+  margin-right: 15px;
+  margin-left: 15px;
+}
+
+.carousel-inner {
+  display: flex;
+  flex-direction: row;
+}
+
+.carousel-item {
+  width: 100%;
+  transition: transform 0.3s ease;
+}
+
+/* Altri stili specifici al tuo componente se necessario */

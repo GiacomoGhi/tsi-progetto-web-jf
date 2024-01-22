@@ -15,6 +15,9 @@ const CommunityView = () => {
   const [user, setUser] = useState<UserDto>()
   const [hits, setHits] = useState<HitsStruct[]>([])
   const [showEditor, setShowEditor] = useState(false)
+  const [articleDescription, setArticleDescription] = useState('')
+  const [articleTitle, setArticleTitle] = useState('')
+  const [saveStatus, setSaveStatus] = useState('')
   const containerRef = useRef<HTMLDivElement | null>(null)
 
   const fetchItems = async (from: number, to: number, filtered = false) => {
@@ -79,7 +82,6 @@ const CommunityView = () => {
       })
       if (!response.hasErrors && response.data) {
         const liked = userLikedArticles.some(item => item.articleId === article.id)
-        console.log(liked)
 
         articleHits = [
           ...articleHits,
@@ -91,8 +93,6 @@ const CommunityView = () => {
         ]
       }
     }
-    console.log(articleHits)
-
     setHits(articleHits)
   }
 
@@ -114,8 +114,6 @@ const CommunityView = () => {
       ]
     })
 
-    console.log(hitToDelete)
-
     if (!hitToDelete.hasErrors && hitToDelete.data) {
       await apiClient.hits.delete(hitToDelete.data.items[0].id)
     }
@@ -129,7 +127,6 @@ const CommunityView = () => {
     }
 
     if (!isLiked && user) {
-      console.log('create')
       createHit(articleId)
     }
     setHits(prevHits => {
@@ -146,10 +143,30 @@ const CommunityView = () => {
     })
   }
 
-  const handleDelete = () => {}
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    const { apiClient } = App
+
+    const articleToCreate: Partial<ArticleDto> = {
+      title: articleTitle,
+      description: articleDescription,
+      isNews: false
+    }
+
+    const response = await apiClient.articles.create(articleToCreate)
+
+    if (!response.hasErrors && response.data) {
+      setSaveStatus('0')
+      setArticleTitle('')
+      setArticleDescription('')
+    } else {
+      setSaveStatus('1')
+    }
+  }
 
   const handleModalClose = () => {
     setShowEditor(false)
+    setSaveStatus('')
   }
 
   const handleFilterSelected = () => {
@@ -180,37 +197,57 @@ const CommunityView = () => {
   return (
     <>
       <Modal isOpen={showEditor} onClose={handleModalClose}>
-        <div className="d-flex container mt-4 p-4 justify-content-start">
-          <form>
-            <div className="row">
-              <div className="mb-3">
-                <label htmlFor="title"></label>
-                <textarea
-                  className="formContent"
-                  rows={1}
-                  placeholder="Titolo"
-                  id="title"
-                  name="title"
-                  maxLength={100}
-                  required
-                />
-              </div>
-              <div>
-                <label htmlFor="content"></label>
-                <textarea
-                  className="formContent"
-                  placeholder="contenuto"
-                  id="content"
-                  name="content"
-                  maxLength={4000}
-                  rows={8}
-                  required></textarea>
-              </div>
-            </div>
-            <button type="submit" className="button">
-              Submit
-            </button>
-          </form>
+        <div className="d-flex container mt-4 p-2 justify-content-start">
+          {saveStatus === '0' ? (
+            <p className="mt-2 mb-4 text-success">Your Article was saved correctly!</p>
+          ) : (
+            <>
+              <form onSubmit={handleSubmit}>
+                <div className="row">
+                  <div className="mb-3">
+                    <label htmlFor="title"></label>
+                    <textarea
+                      className="formContent"
+                      rows={1}
+                      placeholder="Titolo"
+                      id="title"
+                      name="title"
+                      value={articleTitle}
+                      maxLength={100}
+                      required
+                      onChange={e => {
+                        setArticleTitle(e.target.value)
+                      }}
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="content"></label>
+                    <textarea
+                      className="formContent"
+                      placeholder="Contenuto"
+                      id="content"
+                      name="content"
+                      value={articleDescription}
+                      maxLength={4000}
+                      rows={8}
+                      required
+                      onChange={e => {
+                        setArticleDescription(e.target.value)
+                      }}
+                    />
+                  </div>
+                </div>
+                {saveStatus === '1' && (
+                  <p className="text-danger">Something went wrong while saving your article, please try again</p>
+                )}
+                <div className="d-flex justify-content-center">
+                  <button type="submit" className="button">
+                    Submit
+                  </button>
+                </div>
+              </form>
+            </>
+          )}
         </div>
       </Modal>
       <div className="d-flex container">

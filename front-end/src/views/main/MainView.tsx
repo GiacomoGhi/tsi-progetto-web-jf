@@ -53,7 +53,8 @@ function MainView() {
     const response = await apiClient.loggedUser.check()
 
     if (!response.hasErrors && response.data && !response.data.error) {
-      setUserId(response.data?.Id)
+      const user = response.data as unknown as UserDto
+      setUserId(user.id)
       setIsAuth(true)
       setRenderLogin(false)
     }

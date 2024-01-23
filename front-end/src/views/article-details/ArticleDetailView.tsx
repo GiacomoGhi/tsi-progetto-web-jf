@@ -125,7 +125,7 @@ const ArticleDetailView: React.FC<{ userId: string }> = ({ userId }) => {
   return (
     <>
       <div className="mx-3 p-4 pb-2 borderContainer">
-        <div>
+        <div className="article">
           <h1 className="text-center">{title}</h1>
           <article>{body}</article>
         </div>

@@ -1,9 +1,10 @@
 import App from 'App'
+import './ArticleDetailView.styles.scss'
 import { PostDto } from 'infrastructure/api-client/dto/post.dto'
 import React, { useEffect, useRef, useState } from 'react'
 import { useParams } from 'react-router-dom'
 
-const ArticleDetailView = () => {
+const ArticleDetailView: React.FC<{ userId: string }> = ({ userId }) => {
   const params = useParams()
   const [title, setTitle] = useState('')
   const [body, setBody] = useState('')
@@ -123,9 +124,34 @@ const ArticleDetailView = () => {
 
   return (
     <>
-      <div className="borderContainer">
-        <h1>{title}</h1>
-        <article>{body}</article>
+      <div className="mx-3 p-4 pb-2 borderContainer">
+        <div>
+          <h1 className="text-center">{title}</h1>
+          <article>{body}</article>
+        </div>
+        <div>
+          <div className="d-flex container justify-content-end">
+            <button className="button">Aggiungi un commento</button>
+          </div>
+          <div className="scrollableContainer_Adv" ref={containerRef}>
+            {posts.map((post, i) => {
+              return (
+                <div key={i} className="row px-3">
+                  <div
+                    className={
+                      'd-flex container ' +
+                      (post.createdByUserId === userId ? 'justify-content-end' : 'justify-content-start')
+                    }>
+                    <div className="col-auto postContainer pb-3 offset-6">
+                      <h2 className="postAuthor">{'> ' + post.author}</h2>
+                      <article className="ms-2 pe-3">{post.description}</article>
+                    </div>
+                  </div>
+                </div>
+              )
+            })}
+          </div>
+        </div>
       </div>
     </>
   )

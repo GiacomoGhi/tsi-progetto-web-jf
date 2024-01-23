@@ -1,0 +1,24 @@
+.scrollableContainer_Adv {
+  border: 4px solid #000000;
+  table-layout: 'fixed';
+  overflow-y: scroll;
+  overflow-x: hidden;
+  height: 300px;
+}
+
+.postAuthor {
+  font-size: medium;
+}
+
+.postContainer {
+  background-color: #333;
+  color: #fff;
+  padding: 5px 15px 2px 15px;
+  margin: 10px;
+  max-width: 60%;
+  box-sizing: border-box;
+  border-radius: 10px;
+  line-height: 1.2;
+  word-wrap: break-word;
+  align-self: flex-end;
+}

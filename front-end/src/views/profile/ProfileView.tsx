@@ -9,6 +9,8 @@ const ProfileView: React.FC<{ onLogout: () => void }> = ({ onLogout }) => {
   const [fromIsChanged, setFormIsChanged] = useState(false)
   const [userId, setUserId] = useState('')
   const [adminUser, setAdminUser] = useState(false)
+  const [postCounter, setPostCounter] = useState(0)
+  const [articleCounter, setArticleCounter] = useState(0)
   const [showdeleteConfermation, setShowdeleteConfermation] = useState(false)
   const [formData, setFormData] = useState<Partial<UserDto>>({
     email: '',
@@ -46,6 +48,22 @@ const ProfileView: React.FC<{ onLogout: () => void }> = ({ onLogout }) => {
 
     if (!response.hasErrors && response.data) {
       initFormData(response.data as Partial<UserDto>)
+      const user = response.data as unknown as UserDto
+
+      const postsResponse = await apiClient.posts.paged({
+        from: 1,
+        to: 0,
+        filters: [{ field: 'createdByUserId', value: user.id }]
+      })
+      const articlesResponse = await apiClient.articles.paged({
+        from: 1,
+        to: 0,
+        filters: [{ field: 'createdByUserId', value: user.id }]
+      })
+      if (!postsResponse.hasErrors && postsResponse.data && !articlesResponse.hasErrors && articlesResponse.data) {
+        setArticleCounter(articlesResponse.data.totalCount)
+        setPostCounter(postsResponse.data.totalCount)
+      }
     }
   }
 
@@ -190,8 +208,8 @@ const ProfileView: React.FC<{ onLogout: () => void }> = ({ onLogout }) => {
             </div>
             <div className="col-sm-6 px-sm-5">
               <div className="d-flex justify-content-between secondaryBorderContainer">
-                <span>{`POST ${0}`}</span>
-                <span>{`Commenti ${0}`}</span>
+                <span>{`Post: ${articleCounter}`}</span>
+                <span>{`Commenti: ${postCounter}`}</span>
                 <div></div>
               </div>
             </div>

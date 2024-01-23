@@ -280,16 +280,18 @@ export abstract class BaseService<T extends BaseEntity>
     queryBuilder: SelectQueryBuilder<any>,
   ) {
     filters.forEach((filter, i) => {
+      const operator = filter.field === 'createdByUserId' ? '=' : 'like';
+      const p = filter.field === 'createdByUserId' ? '' : '%';
       if (i === 0) {
         queryBuilder.where(
-          `"${alias}"."${filter.field}" like '%${filter.value}%'`,
+          `"${alias}"."${filter.field}" ${operator} '${p}${filter.value}${p}'`,
           {
             value: filter.value,
           },
         );
       } else {
         queryBuilder.andWhere(
-          `"${alias}"."${filter.field}" like '%${filter.value}%'`,
+          `"${alias}"."${filter.field}" ${operator} '${p}${filter.value}${p}'`,
           {
             value: filter.value,
           },

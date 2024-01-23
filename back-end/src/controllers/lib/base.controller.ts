@@ -136,7 +136,6 @@ export class BaseController<
       body.take,
       body.skip,
       body.filters,
-      body.orderBy,
       join,
       body.join != null, // se vengono passate esplicitamente delle relations, sovrascrivo quelle base
     );

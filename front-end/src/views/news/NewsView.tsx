@@ -18,23 +18,23 @@ const NewsView = () => {
   const fetchItems = async (from: number, to: number, filtered = false) => {
     const { apiClient } = App
 
-    try {
-      const response = await apiClient.articles.newsPaged({
-        from,
-        to //,
-        //filters: [{ field: 'isNews', value: true }]
-      })
+    const response = await apiClient.articles.newsPaged({
+      from,
+      to,
+      filters: [{ field: 'title', value: searchText }]
+    })
 
-      console.log('API Response:', response)
-
-      if (!response.hasErrors && response.data) {
-        const data = response.data.items
-        await getHitCountForArticle(data)
+    if (!response.hasErrors && response.data) {
+      const data = [...articles, ...response.data.items]
+      if (filtered) {
+        await getHitCountForArticle(response.data.items)
         setArticlesCount(response.data.totalCount)
-        setArticles(filtered ? data : [...articles, ...data])
+        setArticles(response.data.items)
+      } else {
+        getHitCountForArticle(data)
+        setArticlesCount(response.data.totalCount)
+        setArticles(data)
       }
-    } catch (error) {
-      console.error('Error:', error)
     }
   }
 
@@ -63,14 +63,14 @@ const NewsView = () => {
     setHits(articleHits)
   }
 
-  const handleHitCheck = (articleId: string) => {
+  /*   const handleHitCheck = (articleId: string) => {
     setHits(prevHits => {
       const index = prevHits.findIndex(hit => hit.articleId === articleId)
       const updatedHits = [...prevHits]
       updatedHits[index] = { ...updatedHits[index], checked: !updatedHits[index].checked }
       return updatedHits
     })
-  }
+  } */
 
   const handleFilterSelected = () => {
     fetchItems(10, 0, true)
@@ -103,21 +103,25 @@ const NewsView = () => {
 
   return (
     <>
-      <h1 className="ms-3 my-4">Post dei nostri Editors</h1>
-      <div className="col-lg-4 mt-2">
-        <input
-          className="form-control"
-          placeholder="Cerca un titolo"
-          type="text"
-          onChange={e => {
-            setSearchText(e.target.value)
-          }}
-        />
-      </div>
-      <div className="col-lg-1">
-        <button className="button" onClick={handleFilterSelected}>
-          Search
-        </button>
+      <div className="d-flex justify-content-between align-items-center ms-3 my-4">
+        <h1 className="ms-3 my-4">Post dei nostri Editors</h1>
+        <div className="row mx-3 mt-2">
+          <div className="col-lg-6  col-md-12">
+            <div className="input-group">
+              <input
+                className="custom-search-input"
+                placeholder="Cerca un titolo"
+                type="text"
+                onChange={e => {
+                  setSearchText(e.target.value)
+                }}
+              />
+              <button className="button" onClick={handleFilterSelected}>
+                Search
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
       <div className="scrollableContainerr mx-3 row pt-3" ref={containerRef}>
         {articles.map((article, i) => (

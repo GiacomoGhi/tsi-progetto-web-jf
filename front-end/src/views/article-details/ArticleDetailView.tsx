@@ -27,8 +27,6 @@ const ArticleDetailView: React.FC<{ userId: string; username: string; userRole: 
   const [deleting, setDeleting] = useState(false)
   const [editing, setEditing] = useState(false)
   const [currentUserIsAuthor, setCurrentUserIsAuthor] = useState(false)
-  const [deleteConfermation, setDeleteConfermation] = useState(false)
-  const [userListIndex, setUserListIndex] = useState(-1)
   const containerRef = useRef<HTMLDivElement | null>(null)
 
   const fetchArticle = async () => {
@@ -42,10 +40,11 @@ const ArticleDetailView: React.FC<{ userId: string; username: string; userRole: 
       setTitleOnEdit(response.data.title)
       setBodyOnEdit(response.data.description)
       setStatus(response.data.isNews || false)
+      setCurrentUserIsAuthor(userId === response.data.createdByUserId)
     }
   }
 
-  const fetchPosts = async (from: number, to: number, filtered = false) => {
+  const fetchPosts = async (from: number, to: number) => {
     const { apiClient } = App
 
     const response = await apiClient.posts.paged({

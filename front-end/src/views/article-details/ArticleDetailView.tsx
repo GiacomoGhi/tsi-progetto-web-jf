@@ -2,19 +2,31 @@ import App from 'App'
 import './ArticleDetailView.styles.scss'
 import { PostDto } from 'infrastructure/api-client/dto/post.dto'
 import React, { useEffect, useRef, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import Modal from 'components/modal-wrapper/ModalWrapper'
 
-const ArticleDetailView: React.FC<{ userId: string; username: string }> = ({ userId, username }) => {
+const ArticleDetailView: React.FC<{ userId: string; username: string; userRole: string }> = ({
+  userId,
+  username,
+  userRole
+}) => {
   const params = useParams()
+  const navigate = useNavigate()
   const articleId = params.articleId || ''
   const [title, setTitle] = useState('')
   const [body, setBody] = useState('')
+  const [titleOnEdit, setTitleOnEdit] = useState('')
+  const [bodyOnEdit, setBodyOnEdit] = useState('')
+  const [status, setStatus] = useState(false)
   const [posts, setPosts] = useState<PostDto[]>([])
   const [postsCount, setPostsCount] = useState(0)
   const [showEditor, setShowEditor] = useState(false)
   const [saveStatus, setSaveStatus] = useState('')
+  const [saveStatusArticle, setSaveStatusArticle] = useState('')
   const [postDescription, setPostDescription] = useState('')
+  const [deleting, setDeleting] = useState(false)
+  const [editing, setEditing] = useState(false)
+  const [currentUserIsAuthor, setCurrentUserIsAuthor] = useState(false)
   const [deleteConfermation, setDeleteConfermation] = useState(false)
   const [userListIndex, setUserListIndex] = useState(-1)
   const containerRef = useRef<HTMLDivElement | null>(null)
@@ -27,6 +39,9 @@ const ArticleDetailView: React.FC<{ userId: string; username: string }> = ({ use
     if (!response.hasErrors && response.data) {
       setTitle(response.data.title)
       setBody(response.data.description)
+      setTitleOnEdit(response.data.title)
+      setBodyOnEdit(response.data.description)
+      setStatus(response.data.isNews || false)
     }
   }
 
@@ -46,63 +61,64 @@ const ArticleDetailView: React.FC<{ userId: string; username: string }> = ({ use
     }
   }
 
-  // const updateAndReplace = async (indexId: number) => {
-  //   const { apiClient } = App
-  //   const userToUpdate = posts[indexId]
-  //   const response = await apiClient.users.update(userToUpdate.id, { active: !userToUpdate.active })
+  const updateStatus = async () => {
+    const { apiClient } = App
 
-  //   if (!response.hasErrors && response.data) {
-  //     const newUserList = [...users]
-  //     newUserList[indexId] = response.data
-  //     setUsers(newUserList)
-  //   }
-  // }
+    const response = await apiClient.articles.update(articleId, { isNews: !status })
 
-  // const upgradeAndReplace = async (indexId: number, currentRole: string) => {
-  //   const { apiClient } = App
-  //   const userToUpdate = users[indexId]
-  //   let newRoleAsNumber = parseInt(currentRole) + 1
-  //   if (newRoleAsNumber > 2) {
-  //     newRoleAsNumber = 0
-  //   }
-  //   const newRole = newRoleAsNumber.toString()
-  //   const response = await apiClient.users.update(userToUpdate.id, { role: newRole, active: true })
+    if (!response.hasErrors && response.data) {
+      setStatus(response.data.isNews || false)
+    }
+  }
 
-  //   if (!response.hasErrors && response.data) {
-  //     const newUserList = [...users]
-  //     newUserList[indexId] = response.data
-  //     setUsers(newUserList)
-  //   }
-  // }
+  const updateArticle = async () => {
+    const { apiClient } = App
 
-  // const deleteAndReplace = async (indexId: number) => {
-  //   const { apiClient } = App
-  //   const userToUpdate = users[indexId]
-  //   const response = await apiClient.users.softDelete(userToUpdate.id)
+    const response = await apiClient.articles.update(articleId, { title: titleOnEdit, description: bodyOnEdit })
 
-  //   if (!response.hasErrors && response.data) {
-  //     const newUserList = [...users]
-  //     console.log(response.data)
+    if (!response.hasErrors && response.data) {
+      setTitle(response.data.title)
+      setBody(response.data.description)
+      setTitleOnEdit(response.data.title)
+      setBodyOnEdit(response.data.description)
+      setEditing(false)
+      setSaveStatusArticle('')
+    } else {
+      setSaveStatusArticle('1')
+    }
+  }
 
-  //     newUserList[indexId] = response.data
-  //     setUsers(newUserList)
-  //     setDeleteConfermation(false)
-  //     setUserListIndex(-1)
-  //   }
-  // }
+  const deleteArticle = async () => {
+    const { apiClient } = App
 
-  // const handleUpdateAndReplace = (indexId: number) => {
-  //   updateAndReplace(indexId)
-  // }
-  // const handleUpgradeAndReplace = (indexId: number, role: string) => {
-  //   upgradeAndReplace(indexId, role)
-  // }
+    const response = await apiClient.articles.delete(articleId)
 
-  // const handleDeleteAndReplace = () => {
-  //   if (!(userListIndex === -1)) {
-  //     deleteAndReplace(userListIndex)
-  //   }
-  // }
+    if (!response.hasErrors) {
+      navigate('/community')
+    }
+  }
+
+  const handleEditSave = (e: React.FormEvent) => {
+    e.preventDefault()
+    updateArticle()
+  }
+
+  const handleDelete = () => {
+    deleteArticle()
+  }
+
+  const handleEditClose = () => {
+    setEditing(false)
+  }
+
+  const handleDeleteClose = () => {
+    setDeleting(false)
+  }
+
+  const handleUpdateStatus = () => {
+    updateStatus()
+  }
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     const { apiClient } = App
@@ -156,6 +172,86 @@ const ArticleDetailView: React.FC<{ userId: string; username: string }> = ({ use
 
   return (
     <>
+      <div className="mx-3 p-4 pb-2 borderContainer">
+        {(userRole === '2' || userRole === '1' || currentUserIsAuthor) && (
+          <div className="btn-group" role="group">
+            <button
+              id="btnGroupDrop1"
+              type="button"
+              className="btn btn-primary dropdown-toggle"
+              data-bs-toggle="dropdown"
+              aria-expanded="false">
+              Actions
+            </button>
+            <ul className="dropdown-menu" aria-labelledby="btnGroupDrop1">
+              <li>
+                <button
+                  className="dropdown-item"
+                  onClick={() => {
+                    setEditing(true)
+                  }}>
+                  Edit
+                </button>
+              </li>
+              <li>
+                <button
+                  className="dropdown-item"
+                  onClick={() => {
+                    setDeleting(true)
+                  }}>
+                  Delete
+                </button>
+              </li>
+              {(userRole === '2' || userRole === '1') && (
+                <li>
+                  <div className="ms-3">
+                    <input
+                      type="checkbox"
+                      id="myCheckbox"
+                      name="myCheckbox"
+                      aria-labelledby="checkboxLabel"
+                      checked={status}
+                      onChange={handleUpdateStatus}
+                    />
+                    <label htmlFor="myCheckbox" className="ms-1 mb-1" id="checkboxLabel">
+                      Is News
+                    </label>
+                  </div>
+                </li>
+              )}
+            </ul>
+          </div>
+        )}
+        <div className="article">
+          <h1 className="text-center">{title}</h1>
+          <article>{body}</article>
+        </div>
+        <div>
+          <div className="d-flex container justify-content-end">
+            <button className="button" onClick={() => setShowEditor(true)}>
+              Aggiungi un commento
+            </button>
+          </div>
+          <div className="scrollableContainer_Adv" ref={containerRef}>
+            {posts.map((post, i) => {
+              return (
+                <div key={i} className="row px-3">
+                  <div
+                    className={
+                      'd-flex container ' +
+                      (post.createdByUserId === userId ? 'justify-content-end' : 'justify-content-start')
+                    }>
+                    <div className="col-auto postContainer pb-3 offset-6">
+                      <h2 className="postAuthor">{'> ' + post.author}</h2>
+                      <article className="ms-2 pe-3">{post.description}</article>
+                    </div>
+                  </div>
+                </div>
+              )
+            })}
+          </div>
+        </div>
+      </div>
       <Modal isOpen={showEditor} onClose={handleModalClose}>
         <div className="d-flex formContainer mt-4 p-2 justify-content-start">
           <form onSubmit={handleSubmit}>
@@ -188,55 +284,70 @@ const ArticleDetailView: React.FC<{ userId: string; username: string }> = ({ use
           </form>
         </div>
       </Modal>
-      <div className="mx-3 p-4 pb-2 borderContainer">
-        <div className="btn-group" role="group">
-          <button
-            id="btnGroupDrop1"
-            type="button"
-            className="btn btn-primary dropdown-toggle"
-            data-bs-toggle="dropdown"
-            aria-expanded="false">
-            Actions
-          </button>
-          <ul className="dropdown-menu" aria-labelledby="btnGroupDrop1">
-            <li>
-              <button className="dropdown-item">Edit</button>
-            </li>
-            <li>
-              <button className="dropdown-item">Delete</button>
-            </li>
-          </ul>
-        </div>
-        <div className="article">
-          <h1 className="text-center">{title}</h1>
-          <article>{body}</article>
-        </div>
-        <div>
-          <div className="d-flex container justify-content-end">
-            <button className="button" onClick={() => setShowEditor(true)}>
-              Aggiungi un commento
+      <Modal isOpen={editing} onClose={handleEditClose}>
+        <form onSubmit={handleEditSave}>
+          <div className="row">
+            <div className="mb-3">
+              <label htmlFor="title"></label>
+              <textarea
+                className="formContent"
+                rows={1}
+                placeholder="Titolo"
+                id="title"
+                name="title"
+                value={titleOnEdit}
+                maxLength={100}
+                required
+                onChange={e => {
+                  setTitleOnEdit(e.target.value)
+                }}
+              />
+            </div>
+            <div>
+              <label htmlFor="content"></label>
+              <textarea
+                className="formContent"
+                placeholder="Contenuto"
+                id="content"
+                name="content"
+                value={bodyOnEdit}
+                maxLength={4000}
+                rows={8}
+                required
+                onChange={e => {
+                  setBodyOnEdit(e.target.value)
+                }}
+              />
+            </div>
+          </div>
+          {saveStatusArticle === '1' && (
+            <p className="text-danger">Something went wrong while saving your article, please try again</p>
+          )}
+          <div className="d-flex justify-content-center">
+            <button type="submit" className="button">
+              Submit
             </button>
           </div>
-          <div className="scrollableContainer_Adv" ref={containerRef}>
-            {posts.map((post, i) => {
-              return (
-                <div key={i} className="row px-3">
-                  <div
-                    className={
-                      'd-flex container ' +
-                      (post.createdByUserId === userId ? 'justify-content-end' : 'justify-content-start')
-                    }>
-                    <div className="col-auto postContainer pb-3 offset-6">
-                      <h2 className="postAuthor">{'> ' + post.author}</h2>
-                      <article className="ms-2 pe-3">{post.description}</article>
-                    </div>
-                  </div>
-                </div>
-              )
-            })}
+        </form>
+      </Modal>
+      <Modal isOpen={deleting} onClose={handleDeleteClose}>
+        <div className="mt-4 p-4">
+          <h1 className="text-danger">Stai eliminando l'articolo</h1>
+          <h2 className="mb-5">Vuoi veramente procedere?</h2>
+          <div className="row mb-sm-3 text-center">
+            <div className="col-6">
+              <button className="button" onClick={handleDeleteClose}>
+                No
+              </button>
+            </div>
+            <div className="col-6">
+              <button className="button" onClick={handleDelete}>
+                Yes
+              </button>
+            </div>
           </div>
         </div>
-      </div>
+      </Modal>
     </>
   )
 }

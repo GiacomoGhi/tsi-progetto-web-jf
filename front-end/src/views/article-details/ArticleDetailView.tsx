@@ -3,13 +3,18 @@ import './ArticleDetailView.styles.scss'
 import { PostDto } from 'infrastructure/api-client/dto/post.dto'
 import React, { useEffect, useRef, useState } from 'react'
 import { useParams } from 'react-router-dom'
+import Modal from 'components/modal-wrapper/ModalWrapper'
 
-const ArticleDetailView: React.FC<{ userId: string }> = ({ userId }) => {
+const ArticleDetailView: React.FC<{ userId: string; username: string }> = ({ userId, username }) => {
   const params = useParams()
+  const articleId = params.articleId || ''
   const [title, setTitle] = useState('')
   const [body, setBody] = useState('')
   const [posts, setPosts] = useState<PostDto[]>([])
   const [postsCount, setPostsCount] = useState(0)
+  const [showEditor, setShowEditor] = useState(false)
+  const [saveStatus, setSaveStatus] = useState('')
+  const [postDescription, setPostDescription] = useState('')
   const [deleteConfermation, setDeleteConfermation] = useState(false)
   const [userListIndex, setUserListIndex] = useState(-1)
   const containerRef = useRef<HTMLDivElement | null>(null)
@@ -27,7 +32,6 @@ const ArticleDetailView: React.FC<{ userId: string }> = ({ userId }) => {
 
   const fetchPosts = async (from: number, to: number, filtered = false) => {
     const { apiClient } = App
-    const articleId = params.articleId || ''
 
     const response = await apiClient.posts.paged({
       from,
@@ -99,6 +103,34 @@ const ArticleDetailView: React.FC<{ userId: string }> = ({ userId }) => {
   //     deleteAndReplace(userListIndex)
   //   }
   // }
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    const { apiClient } = App
+
+    const postToCreate: Partial<PostDto> = {
+      description: postDescription,
+      articleId: articleId
+    }
+
+    const response = await apiClient.posts.create(postToCreate)
+
+    if (!response.hasErrors && response.data) {
+      response.data.author = username
+      const data = [response.data, ...posts]
+      setPostsCount(postsCount + 1)
+      setPosts(data)
+      setSaveStatus('0')
+      setPostDescription('')
+      setShowEditor(false)
+    } else {
+      setSaveStatus('1')
+    }
+  }
+
+  const handleModalClose = () => {
+    setShowEditor(false)
+    setSaveStatus('')
+  }
 
   useEffect(() => {
     const container = containerRef.current
@@ -124,14 +156,66 @@ const ArticleDetailView: React.FC<{ userId: string }> = ({ userId }) => {
 
   return (
     <>
+      <Modal isOpen={showEditor} onClose={handleModalClose}>
+        <div className="d-flex formContainer mt-4 p-2 justify-content-start">
+          <form onSubmit={handleSubmit}>
+            <div className="row">
+              <div>
+                <label htmlFor="comment"></label>
+                <textarea
+                  className="formContent"
+                  placeholder="Comment"
+                  id="comment"
+                  name="comment"
+                  value={postDescription}
+                  maxLength={2000}
+                  rows={6}
+                  required
+                  onChange={e => {
+                    setPostDescription(e.target.value)
+                  }}
+                />
+              </div>
+            </div>
+            {saveStatus === '1' && (
+              <p className="text-danger">Something went wrong while saving your comment, please try again</p>
+            )}
+            <div className="d-flex justify-content-center">
+              <button type="submit" className="button">
+                Submit
+              </button>
+            </div>
+          </form>
+        </div>
+      </Modal>
       <div className="mx-3 p-4 pb-2 borderContainer">
+        <div className="btn-group" role="group">
+          <button
+            id="btnGroupDrop1"
+            type="button"
+            className="btn btn-primary dropdown-toggle"
+            data-bs-toggle="dropdown"
+            aria-expanded="false">
+            Actions
+          </button>
+          <ul className="dropdown-menu" aria-labelledby="btnGroupDrop1">
+            <li>
+              <button className="dropdown-item">Edit</button>
+            </li>
+            <li>
+              <button className="dropdown-item">Delete</button>
+            </li>
+          </ul>
+        </div>
         <div className="article">
           <h1 className="text-center">{title}</h1>
           <article>{body}</article>
         </div>
         <div>
           <div className="d-flex container justify-content-end">
-            <button className="button">Aggiungi un commento</button>
+            <button className="button" onClick={() => setShowEditor(true)}>
+              Aggiungi un commento
+            </button>
           </div>
           <div className="scrollableContainer_Adv" ref={containerRef}>
             {posts.map((post, i) => {

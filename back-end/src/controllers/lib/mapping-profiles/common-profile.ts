@@ -114,7 +114,7 @@ export class CommonProfile extends AutomapperProfile {
         ),
         forMember(
           (t) => t.author,
-          mapFrom((s) => s.createdByUser.nickName),
+          mapFrom((s) => s.createdByUser?.nickName),
         ),
       );
     };

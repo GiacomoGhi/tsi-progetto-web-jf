@@ -22,6 +22,7 @@ function MainView() {
   const [renderLogin, setRenderLogin] = useState(false)
   const [confermation, setConfermation] = useState(false)
   const [userId, setUserId] = useState('')
+  const [username, setUsername] = useState('')
 
   const initializeApp = useCallback(async () => {
     if (!isInitialized) {
@@ -42,6 +43,7 @@ function MainView() {
     if (!response.hasErrors && response.data && !response.data.error) {
       const user = response.data as unknown as UserDto
       setUserId(user.id)
+      setUsername(user.nickName)
       setIsAuth(true)
       setRenderLogin(false)
     } else {
@@ -55,6 +57,7 @@ function MainView() {
     if (!response.hasErrors && response.data && !response.data.error) {
       const user = response.data as unknown as UserDto
       setUserId(user.id)
+      setUsername(user.nickName)
       setIsAuth(true)
       setRenderLogin(false)
     }
@@ -102,7 +105,10 @@ function MainView() {
                 <Route element={<PrivateRoute isAuth={isAuth} onFail={handleFail} />}>
                   <Route path="/community" element={<CommunityView />} />
                   <Route path="/profile" element={<ProfileView onLogout={handleLogout} />} />
-                  <Route path="/article-detail/:articleId" element={<ArticleDetailView userId={userId} />} />
+                  <Route
+                    path="/article-detail/:articleId"
+                    element={<ArticleDetailView userId={userId} username={username} />}
+                  />
                 </Route>
               </Routes>
               <LoginSingupWrapper

@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useRef, useState } from 'react'
 import './NewsView.styles.scss'
 import App from 'App'
 import { ArticleDto } from 'infrastructure/api-client/dto/article.dto'
+import { useNavigate } from 'react-router-dom'
 
 type HitsStruct = { articleId: string; hits: number; checked: boolean }
 
@@ -11,6 +12,7 @@ const NewsView = () => {
   const [searchText, setSearchText] = useState('')
   const [hits, setHits] = useState<HitsStruct[]>([])
   const [checked, setChecked] = useState(false)
+  const navigate = useNavigate()
   const containerRef = useRef<HTMLDivElement | null>(null)
 
   const fetchItems = async (from: number, to: number, filtered = false) => {
@@ -74,6 +76,10 @@ const NewsView = () => {
     fetchItems(10, 0, true)
   }
 
+  const handleNavigation = (articleId: string) => {
+    navigate(`/article-detail/${articleId}`)
+  }
+
   useEffect(() => {
     const container = containerRef.current
     if (!container) return
@@ -120,7 +126,9 @@ const NewsView = () => {
                     Interessante: {hits.find(hit => hit.articleId === article.id)?.hits || 0}
                   </label>
                 </div>
-                <button className="button">Leggi Tutto</button>
+                <button className="button" onClick={() => handleNavigation(article.id)}>
+                  Leggi Tutto
+                </button>
               </div>
             </div>
           </div>

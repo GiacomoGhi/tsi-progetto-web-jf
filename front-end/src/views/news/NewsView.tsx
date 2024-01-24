@@ -104,24 +104,29 @@ const NewsView = () => {
   return (
     <>
       <h1 className="ms-3 my-4">Post dei nostri Editors</h1>
+      <div className="col-lg-4 mt-2">
+        <input
+          className="form-control"
+          placeholder="Cerca un titolo"
+          type="text"
+          onChange={e => {
+            setSearchText(e.target.value)
+          }}
+        />
+      </div>
+      <div className="col-lg-1">
+        <button className="button" onClick={handleFilterSelected}>
+          Search
+        </button>
+      </div>
       <div className="scrollableContainerr mx-3 row pt-3" ref={containerRef}>
         {articles.map((article, i) => (
-          <div key={i} className="col-md-6 px-2">
+          <div key={i} className="px-2">
             <div className="borderContainer p-3">
-              <h2>{article.title}</h2>
-              <p className="mb-0">{article.description.slice(0, 200)}...</p>
+              <h2 className="text-center">{article.title}</h2>
+              <p className="mb-0">{article.description.slice(0, 400)}...</p>
               <div className="d-flex justify-content-between">
                 <div className="mt-3">
-                  {/*                   <input
-                    type="checkbox"
-                    id="myCheckbox"
-                    name="myCheckbox"
-                    aria-labelledby="checkboxLabel"
-                    checked={hits.find(hit => hit.articleId === article.id)?.checked || false}
-                    onChange={() => {
-                      handleHitCheck(article.id)
-                    }}
-                  /> */}
                   <label htmlFor="myCheckbox" className="ms-1 mb-1" id="checkboxLabel">
                     Interessante: {hits.find(hit => hit.articleId === article.id)?.hits || 0}
                   </label>
@@ -134,9 +139,6 @@ const NewsView = () => {
           </div>
         ))}
       </div>
-      {/*       <div className="d-flex justify-content-end">
-        <button className="button me-3 mb-4 mt-3">{'<< Scrivi un nuovo post  >>'}</button>
-      </div> */}
     </>
   )
 }

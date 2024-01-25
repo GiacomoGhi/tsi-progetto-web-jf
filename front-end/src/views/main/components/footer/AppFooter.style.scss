@@ -4,8 +4,8 @@ body {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  overflow-x: hidden; /* Nasconde la scrollbar orizzontale */
-}
+  overflow-x: hidden; // Nasconde l'inutile scrollbar orizzontale
+} // modificato per mantenerlo ai piedi del body, invece che sovrapposto e in colonne per gestire logo e testo separatamente
 
 .footerStyle {
   background-color: #bb2e29;
@@ -20,6 +20,7 @@ body {
   align-items: center;
 }
 
+//monogramma ad effetto girandola
 .footer-logo {
   width: 7%;
   transition: transform 0.5s ease;

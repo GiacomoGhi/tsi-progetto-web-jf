@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useRef, useState } from 'react'
 import './NewsView.styles.scss'
 import App from 'App'
 import { ArticleDto } from 'infrastructure/api-client/dto/article.dto'
+import { useNavigate } from 'react-router-dom'
 
 type HitsStruct = { articleId: string; hits: number; checked: boolean }
 
@@ -11,28 +12,29 @@ const NewsView = () => {
   const [searchText, setSearchText] = useState('')
   const [hits, setHits] = useState<HitsStruct[]>([])
   const [checked, setChecked] = useState(false)
+  const navigate = useNavigate()
   const containerRef = useRef<HTMLDivElement | null>(null)
 
   const fetchItems = async (from: number, to: number, filtered = false) => {
     const { apiClient } = App
 
-    try {
-      const response = await apiClient.articles.newsPaged({
-        from,
-        to //,
-        //filters: [{ field: 'isNews', value: true }]
-      })
+    const response = await apiClient.articles.newsPaged({
+      from,
+      to,
+      filters: [{ field: 'title', value: searchText }]
+    })
 
-      console.log('API Response:', response)
-
-      if (!response.hasErrors && response.data) {
-        const data = response.data.items
-        await getHitCountForArticle(data)
+    if (!response.hasErrors && response.data) {
+      const data = [...articles, ...response.data.items]
+      if (filtered) {
+        await getHitCountForArticle(response.data.items)
         setArticlesCount(response.data.totalCount)
-        setArticles(filtered ? data : [...articles, ...data])
+        setArticles(response.data.items)
+      } else {
+        getHitCountForArticle(data)
+        setArticlesCount(response.data.totalCount)
+        setArticles(data)
       }
-    } catch (error) {
-      console.error('Error:', error)
     }
   }
 
@@ -61,17 +63,21 @@ const NewsView = () => {
     setHits(articleHits)
   }
 
-  const handleHitCheck = (articleId: string) => {
+  /*   const handleHitCheck = (articleId: string) => {
     setHits(prevHits => {
       const index = prevHits.findIndex(hit => hit.articleId === articleId)
       const updatedHits = [...prevHits]
       updatedHits[index] = { ...updatedHits[index], checked: !updatedHits[index].checked }
       return updatedHits
     })
-  }
+  } */
 
   const handleFilterSelected = () => {
     fetchItems(10, 0, true)
+  }
+
+  const handleNavigation = (articleId: string) => {
+    navigate(`/article-detail/${articleId}`)
   }
 
   useEffect(() => {
@@ -97,38 +103,46 @@ const NewsView = () => {
 
   return (
     <>
-      <h1 className="ms-3 my-4">Post dei nostri Editors</h1>
+      <div className="d-flex justify-content-between align-items-center ms-3 my-4">
+        <h1 className="ms-3 my-4">Post dei nostri Editors</h1>
+        <div className="row mx-3 mt-2">
+          <div className="col-lg-6  col-md-12">
+            <div className="input-group">
+              <input
+                className="custom-search-input"
+                placeholder="Cerca un titolo"
+                type="text"
+                onChange={e => {
+                  setSearchText(e.target.value)
+                }}
+              />
+              <button className="button" onClick={handleFilterSelected}>
+                Search
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
       <div className="scrollableContainerr mx-3 row pt-3" ref={containerRef}>
         {articles.map((article, i) => (
-          <div key={i} className="col-md-6 px-2">
+          <div key={i} className="px-2">
             <div className="borderContainer p-3">
-              <h2>{article.title}</h2>
-              <p className="mb-0">{article.description.slice(0, 200)}...</p>
+              <h2 className="text-center">{article.title}</h2>
+              <p className="mb-0">{article.description.slice(0, 400)}...</p>
               <div className="d-flex justify-content-between">
                 <div className="mt-3">
-                  {/*                   <input
-                    type="checkbox"
-                    id="myCheckbox"
-                    name="myCheckbox"
-                    aria-labelledby="checkboxLabel"
-                    checked={hits.find(hit => hit.articleId === article.id)?.checked || false}
-                    onChange={() => {
-                      handleHitCheck(article.id)
-                    }}
-                  /> */}
                   <label htmlFor="myCheckbox" className="ms-1 mb-1" id="checkboxLabel">
                     Interessante: {hits.find(hit => hit.articleId === article.id)?.hits || 0}
                   </label>
                 </div>
-                <button className="button">Leggi Tutto</button>
+                <button className="button" onClick={() => handleNavigation(article.id)}>
+                  Leggi Tutto
+                </button>
               </div>
             </div>
           </div>
         ))}
       </div>
-      {/*       <div className="d-flex justify-content-end">
-        <button className="button me-3 mb-4 mt-3">{'<< Scrivi un nuovo post  >>'}</button>
-      </div> */}
     </>
   )
 }

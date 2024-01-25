@@ -38,7 +38,6 @@ export abstract class BaseService<T extends BaseEntity>
     take: number,
     skip: number,
     filters?: { field: string; value: string }[],
-    orderBy?: { [field: string]: 'asc' | 'desc' },
     join: string[] = [],
     overwriteJoin = false,
     manager: EntityManager = this.repository.manager,
@@ -47,12 +46,10 @@ export abstract class BaseService<T extends BaseEntity>
       ? join
       : [...this.findManyDefaultRelations, ...join];
 
-    let queryBuilder = this.buildQuerySelect(
-      relations,
-      orderBy,
-      manager,
-      filters,
-    );
+    let queryBuilder = this.buildQuerySelect(relations, manager, filters);
+
+    const alias = this.repository.metadata.targetName;
+    queryBuilder = queryBuilder.orderBy(`${alias}.createdAt`, 'DESC');
 
     // skip, take
     queryBuilder = queryBuilder.skip(skip).take(take);
@@ -220,7 +217,6 @@ export abstract class BaseService<T extends BaseEntity>
 
   protected buildQuerySelect(
     join: string[],
-    orderBy?: { [field: string]: 'asc' | 'desc' },
     manager = this.repository.manager,
     filters?: { field: string; value: string }[],
   ): SelectQueryBuilder<T> {
@@ -280,16 +276,18 @@ export abstract class BaseService<T extends BaseEntity>
     queryBuilder: SelectQueryBuilder<any>,
   ) {
     filters.forEach((filter, i) => {
+      const operator = filter.field === 'createdByUserId' ? '=' : 'like';
+      const p = filter.field === 'createdByUserId' ? '' : '%';
       if (i === 0) {
         queryBuilder.where(
-          `"${alias}"."${filter.field}" like '%${filter.value}%'`,
+          `"${alias}"."${filter.field}" ${operator} '${p}${filter.value}${p}'`,
           {
             value: filter.value,
           },
         );
       } else {
         queryBuilder.andWhere(
-          `"${alias}"."${filter.field}" like '%${filter.value}%'`,
+          `"${alias}"."${filter.field}" ${operator} '${p}${filter.value}${p}'`,
           {
             value: filter.value,
           },

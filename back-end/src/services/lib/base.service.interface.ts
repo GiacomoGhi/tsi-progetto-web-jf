@@ -7,7 +7,6 @@ export interface BaseServiceInterface<T> {
     take: number,
     skip: number,
     filters?: { field: string; value: string }[],
-    orderBy?: { [field: string]: 'asc' | 'desc' },
     join?: string[],
     overwriteJoin?: boolean,
     manager?: EntityManager,

@@ -9,10 +9,6 @@ export class PostEntityDto extends BaseEntityDto {
 
   @ApiProperty()
   @AutoMap()
-  author?: string;
-
-  @ApiProperty()
-  @AutoMap()
   articleId?: string;
 
   @AutoMap()
@@ -20,6 +16,8 @@ export class PostEntityDto extends BaseEntityDto {
 
   @AutoMap()
   lastModifiedByUserId?: string;
+
+  author?: string;
 
   createdByUserEmail?: string;
 

@@ -15,10 +15,6 @@ export class PostEntity extends BaseEntity {
 
   @AutoMap()
   @Column('varchar')
-  author!: string;
-
-  @AutoMap()
-  @Column('varchar')
   articleId!: string;
 
   @ManyToOne(() => UserEntity, { createForeignKeyConstraints: false })

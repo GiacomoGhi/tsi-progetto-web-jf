@@ -1,7 +1,11 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import './CommunityView.styles.scss'
 import App from 'App'
 import { ArticleDto } from 'infrastructure/api-client/dto/article.dto'
+import { HitDto } from 'infrastructure/api-client/dto/hit.dto'
+import { UserDto } from 'infrastructure/api-client/dto/user.dto'
+import Modal from 'components/modal-wrapper/ModalWrapper'
+import { useNavigate } from 'react-router-dom'
 
 type HitsStruct = { articleId: string; hits: number; checked: boolean }
 
@@ -9,8 +13,13 @@ const CommunityView = () => {
   const [articles, setArticles] = useState<ArticleDto[]>([])
   const [articlesCount, setArticlesCount] = useState(0)
   const [searchText, setSearchText] = useState('')
+  const [user, setUser] = useState<UserDto>()
   const [hits, setHits] = useState<HitsStruct[]>([])
-  const [checked, setChecked] = useState(false)
+  const [showEditor, setShowEditor] = useState(false)
+  const [articleDescription, setArticleDescription] = useState('')
+  const [articleTitle, setArticleTitle] = useState('')
+  const [saveStatus, setSaveStatus] = useState('')
+  const navigate = useNavigate()
   const containerRef = useRef<HTMLDivElement | null>(null)
 
   const fetchItems = async (from: number, to: number, filtered = false) => {
@@ -18,7 +27,8 @@ const CommunityView = () => {
 
     const response = await apiClient.articles.paged({
       from,
-      to
+      to,
+      filters: [{ field: 'title', value: searchText }]
     })
 
     if (!response.hasErrors && response.data) {
@@ -35,9 +45,35 @@ const CommunityView = () => {
     }
   }
 
+  const getLoggdUser = async () => {
+    const { apiClient } = App
+
+    const currentUser = await apiClient.loggedUser.check()
+    if (currentUser.hasErrors || !currentUser.data) return
+
+    return currentUser.data
+  }
+
   const getHitCountForArticle = async (data: ArticleDto[]) => {
     const { apiClient } = App
     let articleHits: HitsStruct[] = []
+
+    const loggedUser: UserDto = await getLoggdUser()
+    setUser(loggedUser)
+
+    if (!loggedUser) return
+
+    const userLikedArticlesResponse = await apiClient.hits.paged({
+      from: 9999,
+      to: 0,
+      filters: [{ field: 'createdByUserId', value: loggedUser.id }]
+    })
+
+    let userLikedArticles: HitDto[] = []
+
+    if (!userLikedArticlesResponse.hasErrors && userLikedArticlesResponse.data) {
+      userLikedArticles = userLikedArticlesResponse.data.items
+    }
 
     for (let i = 0; i < data.length; i++) {
       const article = data[i]
@@ -47,12 +83,14 @@ const CommunityView = () => {
         filters: [{ field: 'articleId', value: article.id }]
       })
       if (!response.hasErrors && response.data) {
+        const liked = userLikedArticles.some(item => item.articleId === article.id)
+
         articleHits = [
           ...articleHits,
           {
             articleId: article.id,
             hits: response.data.totalCount,
-            checked: false
+            checked: liked
           }
         ]
       }
@@ -60,17 +98,85 @@ const CommunityView = () => {
     setHits(articleHits)
   }
 
+  const createHit = async (articleId: string) => {
+    const { apiClient } = App
+
+    await apiClient.hits.create({ articleId: articleId })
+  }
+
+  const deleteHit = async (articleId: string, userId: string) => {
+    const { apiClient } = App
+
+    const hitToDelete = await apiClient.hits.paged({
+      from: 1,
+      to: 0,
+      filters: [
+        { field: 'articleId', value: articleId },
+        { field: 'createdByUserId', value: userId }
+      ]
+    })
+
+    if (!hitToDelete.hasErrors && hitToDelete.data) {
+      await apiClient.hits.delete(hitToDelete.data.items[0].id)
+    }
+  }
+
   const handleHitCheck = (articleId: string) => {
+    const isLiked = hits.find(hit => hit.articleId === articleId)?.checked
+
+    if (isLiked && user) {
+      deleteHit(articleId, user.id)
+    }
+
+    if (!isLiked && user) {
+      createHit(articleId)
+    }
     setHits(prevHits => {
       const index = prevHits.findIndex(hit => hit.articleId === articleId)
       const updatedHits = [...prevHits]
-      updatedHits[index] = { ...updatedHits[index], checked: !updatedHits[index].checked }
+      const isLiked = updatedHits[index].checked
+      const hitsNum = updatedHits[index].hits
+      updatedHits[index] = {
+        ...updatedHits[index],
+        hits: isLiked ? hitsNum - 1 : hitsNum + 1,
+        checked: !updatedHits[index].checked
+      }
       return updatedHits
     })
   }
 
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    const { apiClient } = App
+
+    const articleToCreate: Partial<ArticleDto> = {
+      title: articleTitle,
+      description: articleDescription,
+      isNews: false
+    }
+
+    const response = await apiClient.articles.create(articleToCreate)
+
+    if (!response.hasErrors && response.data) {
+      setSaveStatus('0')
+      setArticleTitle('')
+      setArticleDescription('')
+    } else {
+      setSaveStatus('1')
+    }
+  }
+
+  const handleModalClose = () => {
+    setShowEditor(false)
+    setSaveStatus('')
+  }
+
   const handleFilterSelected = () => {
     fetchItems(10, 0, true)
+  }
+
+  const handleNavigation = (articleId: string) => {
+    navigate(`/article-detail/${articleId}`)
   }
 
   useEffect(() => {
@@ -96,7 +202,82 @@ const CommunityView = () => {
 
   return (
     <>
-      <h1 className="ms-3 my-4">Post degli utenti</h1>
+      <Modal isOpen={showEditor} onClose={handleModalClose}>
+        <div className="d-flex container mt-4 p-2 justify-content-start">
+          {saveStatus === '0' ? (
+            <p className="mt-2 mb-4 text-success">Your Article was saved correctly!</p>
+          ) : (
+            <>
+              <form onSubmit={handleSubmit}>
+                <div className="row">
+                  <div className="mb-3">
+                    <label htmlFor="title"></label>
+                    <textarea
+                      className="formContent"
+                      rows={1}
+                      placeholder="Titolo"
+                      id="title"
+                      name="title"
+                      value={articleTitle}
+                      maxLength={100}
+                      required
+                      onChange={e => {
+                        setArticleTitle(e.target.value)
+                      }}
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="content"></label>
+                    <textarea
+                      className="formContent"
+                      placeholder="Contenuto"
+                      id="content"
+                      name="content"
+                      value={articleDescription}
+                      maxLength={4000}
+                      rows={8}
+                      required
+                      onChange={e => {
+                        setArticleDescription(e.target.value)
+                      }}
+                    />
+                  </div>
+                </div>
+                {saveStatus === '1' && (
+                  <p className="text-danger">Something went wrong while saving your article, please try again</p>
+                )}
+                <div className="d-flex justify-content-center">
+                  <button type="submit" className="button">
+                    Submit
+                  </button>
+                </div>
+              </form>
+            </>
+          )}
+        </div>
+      </Modal>
+      <div className="d-flex container">
+        <div className="row text-center mb-3 pt-2 ms-3 my-4">
+          <div className="col-lg-6">
+            <h1 className="">Post degli utenti</h1>
+          </div>
+          <div className="col-lg-4 mt-2">
+            <input
+              className="form-control"
+              placeholder="Cerca un titolo"
+              type="text"
+              onChange={e => {
+                setSearchText(e.target.value)
+              }}
+            />
+          </div>
+          <div className="col-lg-1">
+            <button className="button" onClick={handleFilterSelected}>
+              Search
+            </button>
+          </div>
+        </div>
+      </div>
       <div className="scrollableContainerr mx-3 row pt-3" ref={containerRef}>
         {articles.map((article, i) => (
           <div key={i} className="col-md-6 px-2">
@@ -119,14 +300,22 @@ const CommunityView = () => {
                     Interessante: {hits.find(hit => hit.articleId === article.id)?.hits || 0}
                   </label>
                 </div>
-                <button className="button">Leggi Tutto</button>
+                <button className="button" onClick={() => handleNavigation(article.id)}>
+                  Leggi Tutto
+                </button>
               </div>
             </div>
           </div>
         ))}
       </div>
       <div className="d-flex justify-content-end">
-        <button className="button me-3 mb-4 mt-3">{'<< Scrivi un nuovo post  >>'}</button>
+        <button
+          className="button me-3 mb-4 mt-3"
+          onClick={() => {
+            setShowEditor(true)
+          }}>
+          {'<< Scrivi un nuovo post  >>'}
+        </button>
       </div>
     </>
   )

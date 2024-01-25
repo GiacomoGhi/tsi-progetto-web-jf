@@ -48,7 +48,11 @@ const AdminUsersAction = () => {
   const upgradeAndReplace = async (indexId: number, currentRole: string) => {
     const { apiClient } = App
     const userToUpdate = users[indexId]
-    const newRole = currentRole === '0' ? '1' : '0'
+    let newRoleAsNumber = parseInt(currentRole) + 1
+    if (newRoleAsNumber > 2) {
+      newRoleAsNumber = 0
+    }
+    const newRole = newRoleAsNumber.toString()
     const response = await apiClient.users.update(userToUpdate.id, { role: newRole, active: true })
 
     if (!response.hasErrors && response.data) {
@@ -71,6 +75,17 @@ const AdminUsersAction = () => {
       setUsers(newUserList)
       setDeleteConfermation(false)
       setUserListIndex(-1)
+    }
+  }
+
+  const renderRole = (role: string) => {
+    switch (role) {
+      case '1':
+        return 'Admin'
+      case '2':
+        return 'Editor'
+      default:
+        return 'User'
     }
   }
 
@@ -176,9 +191,9 @@ const AdminUsersAction = () => {
                           className="button"
                           disabled={user.email.includes('*')}
                           onClick={() => {
-                            handleUpgradeAndReplace(i, user.role === '1' ? '1' : '0')
+                            handleUpgradeAndReplace(i, user.role)
                           }}>
-                          {user.role === '1' ? 'Admin' : 'User'}
+                          {renderRole(user.role)}
                         </button>
                       </td>
                       <td>

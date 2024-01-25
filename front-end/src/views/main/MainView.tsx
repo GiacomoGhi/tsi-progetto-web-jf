@@ -10,6 +10,8 @@ import CommunityView from 'views/community/CommunityView'
 import ProfileView from 'views/profile/ProfileView'
 import PrivateRoute from './components/private-route/PrivateRoute'
 import LoginSingupWrapper from 'views/main/components/login-singup-wrapper/LoginSingupWrapper'
+import { UserDto } from 'infrastructure/api-client/dto/user.dto'
+import ArticleDetailView from 'views/article-details/ArticleDetailView'
 
 function MainView() {
   const { isInitialized, apiClient } = App
@@ -19,6 +21,9 @@ function MainView() {
   const [isAuth, setIsAuth] = useState(false)
   const [renderLogin, setRenderLogin] = useState(false)
   const [confermation, setConfermation] = useState(false)
+  const [userId, setUserId] = useState('')
+  const [username, setUsername] = useState('')
+  const [role, setRole] = useState('')
 
   const initializeApp = useCallback(async () => {
     if (!isInitialized) {
@@ -37,6 +42,10 @@ function MainView() {
     const response = await apiClient.loggedUser.check()
 
     if (!response.hasErrors && response.data && !response.data.error) {
+      const user = response.data as unknown as UserDto
+      setUserId(user.id)
+      setUsername(user.nickName)
+      setRole(user.role)
       setIsAuth(true)
       setRenderLogin(false)
     } else {
@@ -48,6 +57,10 @@ function MainView() {
     const response = await apiClient.loggedUser.check()
 
     if (!response.hasErrors && response.data && !response.data.error) {
+      const user = response.data as unknown as UserDto
+      setUserId(user.id)
+      setUsername(user.nickName)
+      setRole(user.role)
       setIsAuth(true)
       setRenderLogin(false)
     }
@@ -95,6 +108,10 @@ function MainView() {
                 <Route element={<PrivateRoute isAuth={isAuth} onFail={handleFail} />}>
                   <Route path="/community" element={<CommunityView />} />
                   <Route path="/profile" element={<ProfileView onLogout={handleLogout} />} />
+                  <Route
+                    path="/article-detail/:articleId"
+                    element={<ArticleDetailView userId={userId} username={username} userRole={role} />}
+                  />
                 </Route>
               </Routes>
               <LoginSingupWrapper

@@ -1,4 +1,7 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
+import { Carousel } from 'react-bootstrap'
+import 'bootstrap/dist/css/bootstrap.min.css'
+
 import {
   CreatingARWebsiteWithARJS,
   ARBodySystems,
@@ -15,7 +18,6 @@ import {
 function HomeView() {
   const imgPaths = [
     CreatingARWebsiteWithARJS,
-    ARBodySystems,
     AugmentedReality,
     Ikea2,
     Industry40,
@@ -23,47 +25,86 @@ function HomeView() {
     Localize,
     Manutenzione,
     RemoteSupport,
-    Scarpe
+    Scarpe,
+    ARBodySystems // Aggiunto ARBodySystems alla fine dell'array
   ]
 
   return (
-    <>
-      <div className="container-lg pt-4 px-4" id="claim">
-        <div className="row text-center text-black">
-          <h1 className="">Realtà Aumentata</h1>
-          <h2 className="py-4 px-4">Veloce Introduzione all'uso della Realtà Aumentata nelle Applicazioni Web</h2>
+    <div className="container-lg pt-4 px-4" id="claim">
+      <div className="row text-center text-black">
+        <h1 className="">Realtà Aumentata</h1>
+        <h2 className="py-4 px-4">Veloce Introduzione all'uso della Realtà Aumentata nelle Applicazioni Web</h2>
+      </div>
+      <div className="row pb-5" id="homepage">
+        <div className="col-md-6 py-4 justify-content-center text-black">
+          <p className="">Da qui potrai:</p>
+          <ul>
+            <li>Capire cos'è la Realtà Aumentata</li>
+            <li className="py-4">Come implementarla nella tua applicazione Web</li>
+            <li>Conoscere tutti i fans del corso di laurea di TSI</li>
+            <li className="py-4">Iscriverti come fan sfegatato del corso di laurea più figo di tutti</li>
+          </ul>
         </div>
-        <div className="row pb-5" id="homepage">
-          <div className="col-md-6 py-4 justify-content-center text-black">
-            <p className="">Da qui potrai:</p>
-            <ul>
-              <li>Capire cos'è la Realtà Aumentata</li>
-              <li className="py-4">Come implementarla nella tua applicazione Web</li>
-              <li>Conoscere tutti i fans del corso di laurea di TSI</li>
-              <li className="py-4">Iscriverti come fan sfegatato del corso di laurea più figo di tutti</li>
-            </ul>
-          </div>
-          <div
-            id="carouselExampleAutoplaying"
-            className="col-md-6 z-n1 carousel align-self-center slide carousel-fade"
-            data-bs-ride="carousel">
-            <div className="carousel-inner">
-              <div className="carousel-item active">
-                <img src={imgPaths[0]} className="mx-auto d-block img-fluid" alt="Immagine esempio AR" />
-              </div>
-              {imgPaths.map((path, i) => {
-                if (i !== 0)
-                  return (
-                    <div className="carousel-item" key={i}>
-                      <img src={path} className="mx-auto d-block img-fluid" alt="Immagine esempio AR" />
-                    </div>
-                  )
-              })}
-            </div>
-          </div>
+        <div className="col-md-6 z-n1">
+          <Carousel>
+            {imgPaths.map((path, i) => (
+              <Carousel.Item key={i}>
+                <img
+                  className="d-block w-100"
+                  src={path}
+                  alt={`Immagine esempio AR ${i}`}
+                  style={{ height: '300px' }}
+                />
+              </Carousel.Item>
+            ))}
+          </Carousel>
         </div>
       </div>
-    </>
+
+      {/* Contenuto specifico per ARBodySystems */}
+      {imgPaths.includes(ARBodySystems) && (
+        <div className="row pb-5" id="ar-medical">
+          <div className="col-md-6">
+            <img
+              src={ARBodySystems}
+              className="mx-auto d-block img-fluid"
+              alt="AR Body Systems Medical"
+              style={{ height: '300px' }}
+            />
+          </div>
+          <div className="col-md-6 py-4 text-black">
+            <h3>Applicazioni della Realtà Aumentata nella Diagnostica Medica</h3>
+            <p>
+              La Realtà Aumentata (AR) offre un'ampia gamma di applicazioni nella diagnostica medica, rivoluzionando il
+              modo in cui vengono effettuate le diagnosi e gestite le operazioni. Attraverso l'utilizzo di dispositivi
+              AR, i medici possono visualizzare dati cruciali in tempo reale, migliorando la precisione delle diagnosi e
+              semplificando le procedure mediche complesse.
+            </p>
+          </div>
+        </div>
+      )}
+
+      {/* Sezione video di YouTube per l'ingegneria civile (BIM) */}
+      <div className="row">
+        <div className="col-md-12">
+          <h3>Utilizzo della Realtà Aumentata nell'Ingegneria Civile (BIM)</h3>
+          <p>
+            Scopri come la Realtà Aumentata sta trasformando l'ingegneria civile attraverso l'implementazione del
+            Building Information Modeling (BIM). Guarda il video per comprendere le nuove possibilità e le sfide
+            affrontate nel settore.
+          </p>
+
+          <iframe
+            width="100%"
+            height="300"
+            src="https://www.youtube.com/embed/8lY4qaVvR8c"
+            title="YouTube video player"
+            frameBorder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen></iframe>
+        </div>
+      </div>
+    </div>
   )
 }
 

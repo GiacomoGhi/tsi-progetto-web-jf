@@ -1,8 +1,7 @@
 import { BaseDto } from './base.dto'
 
 export interface HitDto extends BaseDto {
-  topic?: string
-  author?: string
+  articleId: string
   createdByUserId?: string
   lastModifiedByUserId?: string
   createdByUserEmail?: string

@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react'
 import './AppNavigationMenu.style.scss'
-import { LogoBlu } from 'assets'
+import { LogoWT } from 'assets'
 import { Link } from 'react-router-dom'
 
 function AppNavigationMenu() {
@@ -32,7 +32,7 @@ function AppNavigationMenu() {
                 href="https://corsi.unibo.it/laurea/TecnologieSistemiInformatici">
                 <img
                   id="logo"
-                  src={LogoBlu}
+                  src={LogoWT}
                   className="img-fluid mx-2"
                   alt="Logo unibo - link per sito web TSI"
                   style={{ maxHeight: '80px' }}

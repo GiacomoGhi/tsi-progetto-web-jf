@@ -1,5 +1,6 @@
 .navBar {
-  background-color: rgb(0, 83, 159);
+  //  background-color: rgb(0, 83, 159);
+  background-color: #bb2e29;
   height: min-content;
   //   position: fixed; /* Fixed position - sit on top of the page */
   //   top: 0;
@@ -8,7 +9,7 @@
 }
 
 #offcanvasDarkNavbar > div.offcanvas-header {
-  background-color: rgb(0, 83, 159);
+  background-color: #bb2e29;
 }
 
 #offcanvasDarkNavbar > div.offcanvas-body > ul > li:hover {
@@ -19,8 +20,10 @@
 }
 
 #offcanvasDarkNavbar > div.offcanvas-body > ul > li {
-  background-color: rgb(22, 22, 22);
+  background-color: #bb2e29;
+  color: black;
   border-radius: 25px;
+  border-color: white;
 }
 
 #offcanvasDarkNavbar > div.offcanvas-header.mb-3 > button:hover {

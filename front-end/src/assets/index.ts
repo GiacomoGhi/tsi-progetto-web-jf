@@ -5,6 +5,7 @@ import CostoPC from './img/CostoPC.png'
 import SwordDamocles from './img/Ivan-Sutherland-Sword-Damocles-246129352.jpg'
 import Ivan from './img/Ivan.png'
 import LogoBlu from './img/LogoBlu.jpg'
+import LogoWT from './img/logo_wT.png'
 import TableBottom from './img/module_table_bottom.png'
 import TableTop from './img/module_table_top.png'
 import QuesitiTech from './img/QuesitiTech.png'
@@ -30,6 +31,7 @@ export {
   SwordDamocles,
   Ivan,
   LogoBlu,
+  LogoWT,
   Monogram,
   TableBottom,
   TableTop,

@@ -1,6 +1,6 @@
 # tsi-progetto-web-jf
 
-## IDE Suggested Extensions
+## IDE Suggested Extensions for development
 
 In Visual Studio Code click the Extensions button in the Activity Bar and install the following extensions:
 
@@ -12,27 +12,24 @@ In Visual Studio Code click the Extensions button in the Activity Bar and instal
 - Prettier Code Formatter
 
 
-## Dev Setup
+## Setup
 
-1. Install dependencies: npm install.
+1. Installare le dipendenze necessarie nei due progetti 'front-end/' e 'back-end/': npm install.
 
 2. Nella root del progetto assicurarsi di avere i file .env
 
-3. Lanciare i servizi docker specificati nel readme del backend, lanciare anche il servizio api locale del backend e se non è stato compreso nei servizi docker.
+3. Lanciare i servizi docker nella cartella .\back-end\devops\postgresql: build dockerfile e docker compose up.
 
-4. Per avviare la web app: lanciare il comando npm run start nella root del progetto.
+4. Lanciare l'app backend con il seguente comando dalla root del progetto back-end/: 'npm run start' o 'npm run dev' (watch mode)   
 
+6. Per avviare la web app: lanciare il comando npm run start nella root del progetto front-end/.
 
-## Stack ARPNeT
-- Axios (API) + React (GUI)
-- PostgreSQL (on a Docker container)
-- NestJS (bak-end and front-end Node)
-- TypeScript (instad of JavaScript)
+7. Popolare db con dati di prova: utilizzando un db manager di propria scelta connettersi al db postgres e lanciare lo script di insert './Documentazione/02_Specifiche/DB/test_insert.sql' - Da notare: il modulo TypeOrm dell'applicativo backend si occuperà in automatico di creare lo schema del db, questo file contiene solamente dei comandi di insert.
 
 
-## StartUp
-
-1. **DB** - On Docker Desktop App, Run the Docker container (tsi-progetto-web/tsi-progetto-postgresql)
-2. **Application Server** (back-end Node) - On VS Code, Run the back-end DEV Script (*maintain running terminal active for all time long*)
-3. **Wsb Server** (front-end Node) - On VS Code, Run the back-end START Script (*maintain running terminal active for all time long*)
-
+## Stack RPNeT
+- React (front-end)
+- PostgreSQL (database, on a Docker container)
+- NestJS (back-end)
+- TypeOrm (db manager)
+  
